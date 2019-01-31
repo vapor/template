@@ -38,8 +38,19 @@
             "default": "3.0.0",
             "conditions": [
                 {
-                    "var": "fluent",
-                    "equals": "true"
+                    "var": "fluentdb",
+                    "in": ["SQLite", "MySQL"]
+                }
+            ]
+        },
+        {
+            "var": "fluentversion",
+            "display": "which version?",
+            "default": "1.0.0",
+            "conditions": [
+                {
+                    "var": "fluentdb",
+                    "equals": "PostgreSQL"
                 }
             ]
         }
