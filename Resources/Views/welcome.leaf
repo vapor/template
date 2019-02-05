@@ -1,0 +1,9 @@
+#set("title") { It works }
+
+#set("body") {
+	<div class="welcome">
+		<img src="/images/it-works.png">
+	</div>
+}
+
+#embed("base")

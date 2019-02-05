@@ -1,0 +1,19 @@
+body, html {
+	height: 100%;
+}
+
+body {
+	font-family: sans-serif;
+}
+
+div.welcome {
+	height: 100%;
+	text-align: center;
+}
+
+div.welcome img {
+	position: relative;
+  	top: 50%;
+  	transform: translateY(-50%);
+	width: 300px;
+}

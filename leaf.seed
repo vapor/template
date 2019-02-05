@@ -8,6 +8,11 @@
     ],
     "questions": [
         {
+            "var": "leaf",
+            "display": "would you like to use leaf?",
+            "choices": ["true", "false"]
+        },
+        {
             "var": "name",
             "display": "what would you like to name your app?",
             "default": "VaporApp"
