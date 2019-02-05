@@ -4,7 +4,8 @@
         "leaf.seed",
         ".git/",
         ".xcodeproj/",
-        ".build/"
+        ".build/",
+        ".png"
     ],
     "questions": [
         {
