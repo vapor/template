@@ -12,6 +12,15 @@ public func routes(_ router: Router) throws {
         return "Hello, world!"
     }
 
+    #if(leaf) {
+    // Says hello
+    router.get("hello", String.parameter) #("{") req -> Future<View> in
+        return try req.view().render("hello", [
+            "name": req.parameters.next(String.self)
+        ])
+    #("}")
+    }
+
     #if(fluent) {
     // Example of configuring a controller
     let todoController = TodoController()
