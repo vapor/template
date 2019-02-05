@@ -1,5 +1,7 @@
 #if(fluent) {
-import Fluent#(fluentdb) }
+import Fluent#(fluentdb) } #if(leaf) {
+import Leaf
+}
 import Vapor
 
 /// Called before your application initializes.
@@ -7,6 +9,8 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     #if(fluent) {
     /// Register providers first
     try services.register(Fluent#(fluentdb)Provider())
+    } #if(leaf) {
+    try services.register(LeafProvider())
     }
 
     /// Register routes to the router
@@ -14,9 +18,14 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     try routes(router)
     services.register(router, as: Router.self)
 
+    #if(leaf) {
+    // Use Leaf for rendering views
+    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
+    }
+
     /// Register middleware
     var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    /// middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
+    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
     middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
     services.register(middlewares)
 
