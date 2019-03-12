@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">
-	<title>#get(title)</title>
-	<link rel="stylesheet" href="/styles/app.css">
+    <meta charset="utf-8">
+    <title>#get(title)</title>
+    <link rel="stylesheet" href="/styles/app.css">
 </head>
 <body>
     #get(body)
