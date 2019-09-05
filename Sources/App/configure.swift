@@ -33,8 +33,7 @@ public func configure(_ config: inout Config, _ env: inout Environment, _ servic
     /// Configure a #(fluentdb) database
     services.register { c -> #(fluentdb)Database in
         #if(fluentdb == "SQLite"):
-        return try #(fluentdb)Database(storage: .memory)
-        #else:
+        return try #(fluentdb)Database(storage: .memory) #else:
         return try #(fluentdb)Database(config: c.make())
         #endif
     }
