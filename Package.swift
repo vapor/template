@@ -7,7 +7,7 @@ let package = Package(
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "3.0.0"),
         #if(fluent):
-        .package(url: "https://github.com/vapor/fluent-#lowercase(fluentdb).git", from: "#(fluentversion)"),
+        .package(url: "https://github.com/vapor/fluent-#lowercased(fluentdb).git", from: "#(fluentversion)"),
         #endif 
         #if(leaf):
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
