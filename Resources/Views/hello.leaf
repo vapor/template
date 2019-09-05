@@ -1,7 +1,7 @@
-#set("title") { Hello, #(name)! }
+#extend("base"):
+#export("title"): Hello, #(name)! #endexport
 
-#set("body") {
+#export("body"):
     <h1>Hello, #(name)!</h1>
-}
-
-#embed("base")
+#endexport
+#endextend

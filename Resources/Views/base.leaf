@@ -6,6 +6,6 @@
     <link rel="stylesheet" href="/styles/app.css">
 </head>
 <body>
-    #get(body)
+    #import(body)
 </body>
 </html>
