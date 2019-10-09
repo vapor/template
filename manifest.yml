@@ -69,3 +69,5 @@ files:
           - AppTests.swift
           - XCTestManifests.swift
   - web.Dockerfile
+  - .gitignore
+
