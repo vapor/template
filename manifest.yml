@@ -9,7 +9,6 @@ variables:
         type: option
         options:
           - name: Postgres
-            description: Recommended. Open source, standards compliant SQL database. Available on most cloud hosting providers.
             data:
               module: Postgres
               url: postgres
@@ -17,7 +16,6 @@ variables:
               version: "2.0.0"
               is_postgres: true
           - name: MySQL
-            description: Popular open source SQL database. Available on most cloud hosting providers. This driver also supports MariaDB.
             data:
               module: MySQL
               url: mysql
@@ -25,7 +23,6 @@ variables:
               version: "4.0.0"
               is_mysql: true
           - name: SQLite
-            description: Open source, embedded SQL database. Its simplistic nature makes it a great candiate for prototyping and testing.
             data: 
               module: SQLite
               url: sqlite
