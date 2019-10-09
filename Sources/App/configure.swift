@@ -1,5 +1,5 @@
 {{#fluent}}import Fluent
-import Fluent{{fluent.db}}Driver
+import Fluent{{fluent.db.module}}Driver
 {{/fluent}}import Vapor
 
 /// Called before your application initializes.
