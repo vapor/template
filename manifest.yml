@@ -9,6 +9,7 @@ variables:
         type: option
         options:
           - name: Postgres
+            description: ""
             data:
               module: Postgres
               url: postgres
@@ -16,6 +17,7 @@ variables:
               version: "2.0.0"
               is_postgres: true
           - name: MySQL
+            description: ""
             data:
               module: MySQL
               url: mysql
@@ -23,6 +25,7 @@ variables:
               version: "4.0.0"
               is_mysql: true
           - name: SQLite
+            description: ""
             data: 
               module: SQLite
               url: sqlite
