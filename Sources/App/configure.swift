@@ -1,15 +1,13 @@
-#if(fluent):
-import Fluent
+{{#fluent}}import Fluent
 import FluentSQLiteDriver
-#endif
-import Vapor
+{{/fluent}}import Vapor
 
 /// Called before your application initializes.
-func configure(_ s: inout Services) {
-    #if(fluent):/// Register providers first
+func configure(_ s: inout Services) {{{#fluent}}
+    /// Register providers first
     s.provider(FluentProvider())
 
-    #endif/// Register routes
+    {{/fluent}/// Register routes
     s.extend(Routes.self) { r, c in
         try routes(r, c)
     }
@@ -26,7 +24,7 @@ func configure(_ s: inout Services) {
         try middlewares.use(c.make(ErrorMiddleware.self))
         
         return middlewares
-    }#if(fluent):
+    }{{#fluent}}
     
     s.extend(Databases.self) { dbs, c in
         try dbs.sqlite(configuration: c.make(), threadPool: c.make())
@@ -44,5 +42,5 @@ func configure(_ s: inout Services) {
         var migrations = Migrations()
         migrations.add(CreateTodo(), to: .sqlite)
         return migrations
-    }#endif
+    }{{/fluent}}
 }
