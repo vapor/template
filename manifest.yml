@@ -19,6 +19,9 @@ variables:
               url: postgres
               id: psql
               version: "2.0.0"
+              extend: "dbs.postgres(config: c.make())"
+              configType: PostgresConfiguration
+              configInit: '.init(hostname: "vapor", username: "vapor", password: "vapor")'
           - name: MySQL
             description: Popular open source SQL database. Available on most cloud hosting providers. This driver also supports MariaDB.
             data:
@@ -26,6 +29,9 @@ variables:
               url: mysql
               id: mysql
               version: "4.0.0"
+              extend: "dbs.mysql(config: c.make())"
+              configType: MySQLConfiguration
+              configInit: '.init(hostname: "vapor", username: "vapor", password: "vapor")'
           - name: SQLite
             description: Open source, embedded SQL database. Its simplistic nature makes it a great candiate for prototyping and testing.
             data: 
@@ -33,6 +39,9 @@ variables:
               url: sqlite
               id: sqlite
               version: "4.0.0"
+              extend: "dbs.sqlite(configuration: c.make(), threadPool: c.make())"
+              configType: SQLiteConfiguration
+              configInit: '.init(hostname: "vapor", username: "vapor", password: "vapor")'
 files:
   - file: Package.swift
     dynamic: true

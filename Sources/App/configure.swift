@@ -27,11 +27,11 @@ func configure(_ s: inout Services) {
     }{{#fluent}}
     
     s.extend(Databases.self) { dbs, c in
-        try dbs.sqlite(configuration: c.make(), threadPool: c.make())
+        try {{fluent.db.extend}}
     }
 
-    s.register(SQLiteConfiguration.self) { c in
-        return .init(storage: .connection(.file(path: "db.sqlite")))
+    s.register({{fluent.db.configType}}.self) { c in
+        return {{fluent.db.configInit}}
     }
 
     s.register(Database.self) { c in
