@@ -1,0 +1,41 @@
+name: Vapor Template
+variables:
+  - name: name
+    readable: What would you like to name your app?
+    type: string
+    default: VaporApp
+  - name: leaf
+    readable: Would you like to use Leaf?
+    type: bool
+    default: false
+  - name: fluent
+    readable: Would you like to use Fluent?
+    type: nested
+    variables:
+      - name: db
+        readable: Which database would you like to use?
+        type: option
+        options:
+          - SQLite
+          - PostgreSQL
+          - MySQL
+files:
+  - web.Dockerfile
+  - file: Package.swift
+    dynamic: true
+  - folder: Sources/App
+    files:
+      - app.swift
+      - boot.swift
+      - file: configure.swift
+        dynamic: true
+      - file: routes.swift
+        dynamic: true
+  - folder: Resources/Views
+    condition:
+      variable: leaf
+      equals: true
+    files:
+      - hello.leaf
+      - base.leaf
+      - welcome.leaf
