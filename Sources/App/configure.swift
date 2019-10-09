@@ -7,7 +7,7 @@ func configure(_ s: inout Services) {
     {{#fluent}}/// Register providers first
     s.provider(FluentProvider())
 
-    {{/fluent}/// Register routes
+    {{/fluent}}/// Register routes
     s.extend(Routes.self) { r, c in
         try routes(r, c)
     }
