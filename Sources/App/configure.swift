@@ -31,7 +31,7 @@ func configure(_ s: inout Services) {
     }
 
     s.register({{fluent.db.configType}}.self) { c in
-        return {{fluent.db.configInit}}
+        return {{{fluent.db.configInit}}}
     }
 
     s.register(Database.self) { c in
