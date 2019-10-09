@@ -3,8 +3,8 @@ import FluentSQLiteDriver
 {{/fluent}}import Vapor
 
 /// Called before your application initializes.
-func configure(_ s: inout Services) {{{#fluent}}
-    /// Register providers first
+func configure(_ s: inout Services) {
+    {{#fluent}}/// Register providers first
     s.provider(FluentProvider())
 
     {{/fluent}/// Register routes
