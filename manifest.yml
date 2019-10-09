@@ -18,18 +18,21 @@ variables:
               module: Postgres
               url: postgres
               id: psql
+              version: "2.0.0"
           - name: MySQL
             description: Popular open source SQL database. Available on most cloud hosting providers. This driver also supports MariaDB.
             data:
               module: MySQL
               url: mysql
               id: mysql
+              version: "4.0.0"
           - name: SQLite
             description: Open source, embedded SQL database. Its simplistic nature makes it a great candiate for prototyping and testing.
             data: 
               module: SQLite
               url: sqlite
               id: sqlite
+              version: "4.0.0"
 files:
   - web.Dockerfile
   - file: Package.swift
