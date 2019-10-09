@@ -1,9 +1,5 @@
 name: Vapor Template
 variables:
-  - name: name
-    description: What would you like to name your app?
-    type: string
-    default: VaporApp
   - name: fluent
     description: Would you like to use Fluent?
     type: nested
