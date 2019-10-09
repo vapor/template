@@ -1,20 +1,42 @@
 name: Vapor Template
 variables:
   - name: name
-    readable: What would you like to name your app?
+    description: What would you like to name your app?
     type: string
     default: VaporApp
   - name: fluent
-    readable: Would you like to use Fluent?
+    description: Would you like to use Fluent?
     type: nested
     variables:
       - name: db
-        readable: Which database would you like to use?
+        description: Which database would you like to use?
         type: option
         options:
-          - SQLite
-          - Postgres
-          - MySQL
+          - name: SQLite
+            description: >
+              Open source, embedded SQL database. 
+              Its simplistic nature makes it a great candiate 
+              for prototyping and testing.
+            data: 
+              module: SQLite
+              url: sqlite
+              id: sqlite
+          - name: Postgres
+            description: > 
+              Recommended. Open source, standards compliant 
+              SQL database. Available on most cloud hosting providers.
+            data:
+              module: MySQL
+              url: postgres
+              id: psql
+          - name: MySQL
+            description: > 
+              Popular open source SQL database. Available on most 
+              cloud hosting providers. This driver also supports MariaDB.
+            data:
+              module: MySQL
+              url: mysql
+              id: mysql
 files:
   - web.Dockerfile
   - file: Package.swift
