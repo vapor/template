@@ -1,6 +1,8 @@
-#if(fluent):import Fluent
+#if(fluent):
+import Fluent
 import FluentSQLiteDriver
-#endifimport Vapor
+#endif
+import Vapor
 
 /// Called before your application initializes.
 func configure(_ s: inout Services) {

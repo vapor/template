@@ -1,5 +1,7 @@
-#if(fluent):import Fluent
-#endifimport Vapor
+#if(fluent):
+import Fluent
+#endif
+import Vapor
 
 func routes(_ r: Routes, _ c: Container) throws {
     r.get { req in
