@@ -55,3 +55,17 @@ files:
         files: 
           - AppTests.swift
           - XCTestManifests.swift
+  - folder: Models
+    if: fluent
+    files: 
+      - Todo.swift
+  - folder: Migrations
+    if: fluent
+    files: 
+      - CreateTodo.swift
+  - folder: Controllers
+    files: 
+      - .gitkeep
+      - file: TodoController.swift
+        if: fluent
+
