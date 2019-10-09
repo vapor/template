@@ -15,7 +15,7 @@ variables:
           - name: Postgres
             description: Recommended. Open source, standards compliant SQL database. Available on most cloud hosting providers.
             data:
-              module: MySQL
+              module: Postgres
               url: postgres
               id: psql
           - name: MySQL
