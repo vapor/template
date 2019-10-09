@@ -24,7 +24,12 @@ func configure(_ s: inout Services) {
         try middlewares.use(c.make(ErrorMiddleware.self))
         
         return middlewares
-    }{{#fluent}}{{#fluent.db.is_postgres}}
+    }{{#fluent}}
+
+    s.register(Database.self) { c in
+        return try c.make(Databases.self).database(.{{fluent.db.id}})!
+    }{{#fluent.db.is_postgres}}
+
     s.extend(Databases.self) { dbs, c in
         try dbs.postgres(config: c.make())
     }
@@ -33,6 +38,7 @@ func configure(_ s: inout Services) {
         return .init(hostname: "vapor", username: "vapor", password: "vapor")
     }
     {{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+
     s.extend(Databases.self) { dbs, c in
         try dbs.mysql(config: c.make())
     }
@@ -41,19 +47,15 @@ func configure(_ s: inout Services) {
         return .init(hostname: "vapor", username: "vapor", password: "vapor")
     }
     {{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}
+    
     s.extend(Databases.self) { dbs, c in
         dbs.sqlite(configuration: c.make(), threadPool: c.make())
     }
 
     s.register(SQLiteConfiguration.self) { c in
         return .init(storage: .connection(.file(path: "db.sqlite")))
-    }
-    {{/fluent.db.is_sqlite}}
+    }{{/fluent.db.is_sqlite}}
 
-    s.register(Database.self) { c in
-        return try c.make(Databases.self).database(.{{fluent.db.id}})!
-    }
-    
     s.register(Migrations.self) { c in
         var migrations = Migrations()
         migrations.add(CreateTodo(), to: .{{fluent.db.id}})
