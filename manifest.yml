@@ -35,6 +35,7 @@ variables:
               url: sqlite
               id: sqlite
               version: "4.0.0"
+              is_sqlite: true
 files:
   - file: Package.swift
     dynamic: true
