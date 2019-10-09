@@ -24,15 +24,31 @@ func configure(_ s: inout Services) {
         try middlewares.use(c.make(ErrorMiddleware.self))
         
         return middlewares
-    }{{#fluent}}
-    
+    }{{#fluent}}{{#fluent.db.is_postgres}}
     s.extend(Databases.self) { dbs, c in
-        try {{fluent.db.extend}}
+        try dbs.postgres(config: c.make())
     }
 
-    s.register({{fluent.db.configType}}.self) { c in
-        return {{{fluent.db.configInit}}}
+    s.register(PostgresConfiguration.self) { c in
+        return .init(hostname: "vapor", username: "vapor", password: "vapor")
     }
+    {{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+    s.extend(Databases.self) { dbs, c in
+        try dbs.mysql(config: c.make())
+    }
+
+    s.register(MySQLConfiguration.self) { c in
+        return .init(hostname: "vapor", username: "vapor", password: "vapor")
+    }
+    {{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}
+    s.extend(Databases.self) { dbs, c in
+        dbs.sqlite(configuration: c.make(), threadPool: c.make())
+    }
+
+    s.register(SQLiteConfiguration.self) { c in
+        return .init(storage: .connection(.file(path: "db.sqlite")))
+    }
+    {{/fluent.db.is_sqlite}}
 
     s.register(Database.self) { c in
         return try c.make(Databases.self).database(.{{fluent.db.id}})!
