@@ -1,5 +1,5 @@
-import Fluent
-import Vapor
+#if(fluent):import Fluent
+#endifimport Vapor
 
 func routes(_ r: Routes, _ c: Container) throws {
     r.get { req in
@@ -8,10 +8,11 @@ func routes(_ r: Routes, _ c: Container) throws {
 
     r.get("hello") { req -> String in
         return "Hello, world!"
-    }
+    }#if(fluent):
 
     let todoController = try TodoController(db: c.make())
     r.get("todos", use: todoController.index)
     r.post("todos", use: todoController.create)
     r.on(.DELETE, "todos", ":todoID", use: todoController.delete)
+    #endif
 }

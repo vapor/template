@@ -27,3 +27,13 @@ files:
         dynamic: true
       - file: routes.swift
         dynamic: true
+  - folder: Sources/Run
+    files:
+      - main.swift
+  - folder: Tests
+    files: 
+      - LinuxMain.swift
+      - folder: AppTests
+        files: 
+          - AppTests.swift
+          - XCTestManifests.swift
