@@ -12,12 +12,6 @@ variables:
         description: Which database would you like to use?
         type: option
         options:
-          - name: SQLite
-            description: Open source, embedded SQL database. Its simplistic nature makes it a great candiate for prototyping and testing.
-            data: 
-              module: SQLite
-              url: sqlite
-              id: sqlite
           - name: Postgres
             description: Recommended. Open source, standards compliant SQL database. Available on most cloud hosting providers.
             data:
@@ -30,6 +24,12 @@ variables:
               module: MySQL
               url: mysql
               id: mysql
+          - name: SQLite
+            description: Open source, embedded SQL database. Its simplistic nature makes it a great candiate for prototyping and testing.
+            data: 
+              module: SQLite
+              url: sqlite
+              id: sqlite
 files:
   - web.Dockerfile
   - file: Package.swift

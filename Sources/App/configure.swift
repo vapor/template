@@ -1,5 +1,5 @@
 {{#fluent}}import Fluent
-import FluentSQLiteDriver
+import Fluent{{fluent.db}}Driver
 {{/fluent}}import Vapor
 
 /// Called before your application initializes.
@@ -35,12 +35,12 @@ func configure(_ s: inout Services) {
     }
 
     s.register(Database.self) { c in
-        return try c.make(Databases.self).database(.sqlite)!
+        return try c.make(Databases.self).database(.{{fluent.db.id}})!
     }
     
     s.register(Migrations.self) { c in
         var migrations = Migrations()
-        migrations.add(CreateTodo(), to: .sqlite)
+        migrations.add(CreateTodo(), to: .{{fluent.db.id}})
         return migrations
     }{{/fluent}}
 }
