@@ -4,10 +4,6 @@ variables:
     readable: What would you like to name your app?
     type: string
     default: VaporApp
-  - name: leaf
-    readable: Would you like to use Leaf?
-    type: bool
-    default: false
   - name: fluent
     readable: Would you like to use Fluent?
     type: nested
@@ -17,7 +13,7 @@ variables:
         type: option
         options:
           - SQLite
-          - PostgreSQL
+          - Postgres
           - MySQL
 files:
   - web.Dockerfile
@@ -31,11 +27,3 @@ files:
         dynamic: true
       - file: routes.swift
         dynamic: true
-  - folder: Resources/Views
-    condition:
-      variable: leaf
-      equals: true
-    files:
-      - hello.leaf
-      - base.leaf
-      - welcome.leaf

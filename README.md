@@ -1,5 +1,5 @@
 <p align="center">
-    <h1>Template (under construction)</h1>
+    <img src="https://user-images.githubusercontent.com/1342803/36623515-7293b4ec-18d3-11e8-85ab-4e2f8fb38fbd.png" width="320" alt="API Template">
     <br>
     <br>
     <a href="http://docs.vapor.codes/3.0/">
@@ -15,6 +15,6 @@
         <img src="https://circleci.com/gh/vapor/api-template.svg?style=shield" alt="Continuous Integration">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-4.1-brightgreen.svg" alt="Swift 4.1">
+        <img src="http://img.shields.io/badge/swift-5-brightgreen.svg" alt="Swift 5">
     </a>
 </p>

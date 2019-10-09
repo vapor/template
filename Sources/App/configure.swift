@@ -1,67 +1,46 @@
-#if(fluent):
-import Fluent#(fluentdb) #endif #if(leaf):
-import Leaf
-#endif
+import Fluent
+import FluentSQLiteDriver
 import Vapor
 
 /// Called before your application initializes.
-public func configure(_ config: inout Config, _ env: inout Environment, _ services: inout Services) throws {
-    #if(fluent):
+func configure(_ s: inout Services) throws {
     /// Register providers first
-    try services.register(Fluent#(fluentdb)Provider())
-    #endif #if(leaf):
-    try services.register(LeafProvider())
-    #endif
+    s.provider(FluentProvider())
 
-    /// Register routes to the router
-    let router = EngineRouter.default()
-    try routes(router)
-    services.register(router, as: Router.self)
-
-    #if(leaf):
-    // Use Leaf for rendering views
-    config.prefer(LeafRenderer.self, for: ViewRenderer.self)
-    #endif
+    /// Register routes
+    s.extend(Routes.self) { r, c in
+        try routes(r, c)
+    }
 
     /// Register middleware
-    var middlewares = MiddlewareConfig() // Create _empty_ middleware config
-    middlewares.use(FileMiddleware.self) // Serves files from `Public/` directory
-    middlewares.use(ErrorMiddleware.self) // Catches errors and converts to HTTP response
-    services.register(middlewares)
-
-    #if(fluent):
-    /// Configure a #(fluentdb) database
-    services.register { c -> #(fluentdb)Database in
-        #if(fluentdb == "SQLite"):
-        return try #(fluentdb)Database(storage: .memory) #else:
-        return try #(fluentdb)Database(config: c.make())
-        #endif
+    s.register(MiddlewareConfiguration.self) { c in
+        // Create _empty_ middleware config
+        var middlewares = MiddlewareConfiguration()
+        
+        // Serves files from `Public/` directory
+        /// middlewares.use(FileMiddleware.self)
+        
+        // Catches errors and converts to HTTP response
+        try middlewares.use(c.make(ErrorMiddleware.self))
+        
+        return middlewares
+    }
+    
+    s.extend(Databases.self) { dbs, c in
+        try dbs.sqlite(configuration: c.make(), threadPool: c.make())
     }
 
-    /// Register the configured #(fluentdb) database to the database config.
-    services.register { c -> DatabasesConfig in
-        var databases = DatabasesConfig()
-        #if(fluentdb == "SQLite"):
-        try databases.add(database: c.make(#(fluentdb)Database.self), as: .sqlite)
-        #elseif(fluentdb == "PostgreSQL"):
-        try databases.add(database: c.make(#(fluentdb)Database.self), as: .psql)
-        #elseif(fluentdb == "MySQL"):
-        try databases.add(database: c.make(#(fluentdb)Database.self), as: .mysql)
-        #endif
-        return databases
+    s.register(SQLiteConfiguration.self) { c in
+        return .init(storage: .connection(.file(path: "db.sqlite")))
     }
 
-    /// Configure migrations
-    services.register { c -> MigrationConfig in
-        var migrations = MigrationConfig()
-        #if(fluentdb == "SQLite"):
-        migrations.add(model: Todo.self, database: .sqlite)
-        #elseif(fluentdb == "PostgreSQL"):
-        migrations.add(model: Todo.self, database: .psql)
-        #elseif(fluentdb == "MySQL"):
-        migrations.add(model: Todo.self, database: .mysql)
-        #endif
+    s.register(Database.self) { c in
+        return try c.make(Databases.self).database(.sqlite)!
+    }
+    
+    s.register(Migrations.self) { c in
+        var migrations = Migrations()
+        migrations.add(CreateTodo(), to: .sqlite)
         return migrations
     }
-    #endif
 }
