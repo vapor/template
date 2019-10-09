@@ -4,11 +4,11 @@ import Vapor
 public func routes(_ router: Router) throws {
     // Basic "It works" example
     router.get { req in
-        #if(leaf) {
+        #if(leaf):
         return try req.view().render("welcome")
-        } else {
+        #else:
         return "it works!"
-        }
+        #endif
     }
     
     // Basic "Hello, world!" example
@@ -16,20 +16,20 @@ public func routes(_ router: Router) throws {
         return "hello, world!"
     }
 
-    #if(leaf) {
+    #if(leaf):
     // Says hello
-    router.get("hello", String.parameter) #("{") req -> Future<View> in
+    router.get("hello", String.parameter) { req -> Future<View> in
         return try req.view().render("hello", [
             "name": req.parameters.next(String.self)
         ])
-    #("}")
     }
+    #endif
 
-    #if(fluent) {
+    #if(fluent):
     // Example of configuring a controller
     let todoController = TodoController()
     router.get("todos", use: todoController.index)
     router.post("todos", use: todoController.create)
     router.delete("todos", Todo.parameter, use: todoController.delete)
-    }
+    #endif
 }
