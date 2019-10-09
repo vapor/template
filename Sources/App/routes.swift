@@ -1,5 +1,5 @@
 {{#fluent}}import Fluent
-{{/fluent}import Vapor
+{{/fluent}}import Vapor
 
 func routes(_ r: Routes, _ c: Container) throws {
     r.get { req in
