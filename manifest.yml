@@ -45,9 +45,22 @@ files:
         dynamic: true
       - file: routes.swift
         dynamic: true
-  - folder: Sources/Run
-    files:
-      - main.swift
+      - folder: Models
+        if: fluent
+        files: 
+          - Todo.swift
+      - folder: Migrations
+        if: fluent
+        files: 
+          - CreateTodo.swift
+      - folder: Controllers
+        files: 
+          - .gitkeep
+          - file: TodoController.swift
+            if: fluent
+      - folder: Sources/Run
+        files:
+          - main.swift
   - folder: Tests
     files: 
       - LinuxMain.swift
@@ -55,17 +68,3 @@ files:
         files: 
           - AppTests.swift
           - XCTestManifests.swift
-  - folder: Models
-    if: fluent
-    files: 
-      - Todo.swift
-  - folder: Migrations
-    if: fluent
-    files: 
-      - CreateTodo.swift
-  - folder: Controllers
-    files: 
-      - .gitkeep
-      - file: TodoController.swift
-        if: fluent
-
