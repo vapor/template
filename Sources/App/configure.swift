@@ -36,8 +36,7 @@ func configure(_ s: inout Services) {
 
     s.register(PostgresConfiguration.self) { c in
         return .init(hostname: "vapor", username: "vapor", password: "vapor")
-    }
-    {{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+    }{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
 
     s.extend(Databases.self) { dbs, c in
         try dbs.mysql(configuration: c.make())
@@ -45,8 +44,7 @@ func configure(_ s: inout Services) {
 
     s.register(MySQLConfiguration.self) { c in
         return .init(hostname: "vapor", username: "vapor", password: "vapor")
-    }
-    {{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}
+    }{{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}
 
     s.extend(Databases.self) { dbs, c in
         try dbs.sqlite(configuration: c.make(), threadPool: c.make())
