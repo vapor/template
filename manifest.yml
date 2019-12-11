@@ -64,6 +64,7 @@ files:
       - folder: AppTests
         files: 
           - AppTests.swift
-  - web.Dockerfile
+  - file: web.Dockerfile
+    dynamic: true
   - .gitignore
 

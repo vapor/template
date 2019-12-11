@@ -5,11 +5,11 @@ FROM vapor/swift:5.1 as build
 WORKDIR /build
 
 # Copy entire repo into container
-COPY . .
+COPY . .{{#fluent.db.is_sqlite}}
 
 # Install sqlite3
 RUN apt-get update -y \
-	&& apt-get install -y libsqlite3-dev
+	&& apt-get install -y libsqlite3-dev{{/fluent.db.is_sqlite}}
 
 # Compile with optimizations
 RUN swift build \
