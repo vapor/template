@@ -61,11 +61,9 @@ files:
                 if: fluent
   - folder: Tests
     files: 
-      - LinuxMain.swift
       - folder: AppTests
         files: 
           - AppTests.swift
-          - XCTestManifests.swift
   - web.Dockerfile
   - .gitignore
 
