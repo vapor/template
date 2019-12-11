@@ -1,13 +1,7 @@
 import Fluent
 import Vapor
 
-final class TodoController {
-    let db: Database
-
-    init(db: Database) {
-        self.db = db
-    }
-
+struct TodoController {
     func index(req: Request) throws -> EventLoopFuture<[Todo]> {
         return Todo.query(on: self.db).all()
     }
