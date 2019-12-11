@@ -42,8 +42,6 @@ files:
           - main.swift
       - folder: App
         files:
-          - app.swift
-          - boot.swift
           - file: configure.swift
             dynamic: true
           - file: routes.swift
