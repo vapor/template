@@ -1,17 +1,17 @@
 {{#fluent}}import Fluent
 {{/fluent}}import Vapor
 
-func routes(_ r: Routes, _ c: Container) throws {
-    r.get { req in
+func routes(_ app: Application) throws {
+    app.get { req in
         return "It works!"
     }
 
-    r.get("hello") { req -> String in
+    app.get("hello") { req -> String in
         return "Hello, world!"
     }{{#fluent}}
 
-    let todoController = try TodoController(db: c.make())
-    r.get("todos", use: todoController.index)
-    r.post("todos", use: todoController.create)
-    r.on(.DELETE, "todos", ":todoID", use: todoController.delete){{/fluent}}
+    let todoController = TodoController()
+    app.get("todos", use: todoController.index)
+    app.post("todos", use: todoController.create)
+    app.delete("todos", ":todoID", use: todoController.delete){{/fluent}}
 }
