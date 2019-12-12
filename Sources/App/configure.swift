@@ -3,7 +3,7 @@ import Fluent{{fluent.db.module}}Driver
 {{/fluent}}import Vapor
 
 // configures your application
-func configure(_ app: Application) throws {
+public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory)){{#fluent}}
 
