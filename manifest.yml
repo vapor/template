@@ -67,4 +67,4 @@ files:
   - file: web.Dockerfile
     dynamic: true
   - .gitignore
-
+  - .dockerignore
