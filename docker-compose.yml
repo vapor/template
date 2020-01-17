@@ -18,13 +18,13 @@ services:
       POSTGRES_PASSWORD: vapor_password
       POSTGRES_DB: vapor_database
     ports:
-      - '5432:5432'{{/fluent.db.is_postgres}}
-
-  {{#fluent.db.is_mysql}}db:
+      - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+  db:
     image: mysql:8.0
     environment:
       MYSQL_USER: vapor_username
       MYSQL_PASSWORD: vapor_password
       MYSQL_DATABASE: vapor_database
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
