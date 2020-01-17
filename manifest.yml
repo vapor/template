@@ -26,7 +26,7 @@ variables:
               is_mysql: true
           - name: SQLite
             description: ""
-            data: 
+            data:
               module: SQLite
               url: sqlite
               id: sqlite
@@ -48,21 +48,21 @@ files:
             dynamic: true
           - folder: Models
             if: fluent
-            files: 
+            files:
               - Todo.swift
           - folder: Migrations
             if: fluent
-            files: 
+            files:
               - CreateTodo.swift
           - folder: Controllers
-            files: 
+            files:
               - .gitkeep
               - file: TodoController.swift
                 if: fluent
   - folder: Tests
-    files: 
+    files:
       - folder: AppTests
-        files: 
+        files:
           - AppTests.swift
   - file: web.Dockerfile
     dynamic: true
