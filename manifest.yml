@@ -66,5 +66,7 @@ files:
           - AppTests.swift
   - file: web.Dockerfile
     dynamic: true
+  - file: docker-compose.yml
+    dynamic: true
   - .gitignore
   - .dockerignore

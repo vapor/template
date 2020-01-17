@@ -1,11 +1,22 @@
-version: '2'
+version: '3.7'
 
 services:
-  db:
-    image: postgres:11
+  {{name}}:
+    image: {{name}}:latest
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    {{#fluent}}depends_on:
+      {{#fluent.db.is_postgres}}- postgres{{/fluent.db.is_postgres}}
+    {{/fluent}}
+    ports:
+      - '8080:80'
+
+  {{#fluent.db.is_postgres}}db:
+    image: postgres:11.5-alpine
     environment:
       POSTGRES_USER: vapor_username
-      POSTGRES_DB: vapor_database
       POSTGRES_PASSWORD: vapor_password
+      POSTGRES_DB: vapor_database
     ports:
-      - 5432:5432
+      - '5432:5432'{{/fluent.db.is_postgres}}
