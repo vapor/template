@@ -17,9 +17,7 @@ public func configure(_ app: Application) throws {
         username: "vapor",
         password: "vapor",
         database: "vapor"
-    ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(
-        file: "db.sqlite"
-    ), as: .sqlite){{/fluent.db.is_sqlite}}
+    ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
 
     app.migrations.add(CreateTodo()){{/fluent}}
 
