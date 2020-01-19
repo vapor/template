@@ -5,7 +5,6 @@ services:
     image: {{name}}:latest
     build:
       context: .
-      dockerfile: web.Dockerfile
     {{#fluent}}depends_on:
       - db{{/fluent}}
     ports:
