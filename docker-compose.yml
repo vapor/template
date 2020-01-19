@@ -2,6 +2,9 @@ version: '3.7'
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL}
+  DATABASE_NAME: ${DATABASE_NAME:-vapor_database}
+  DATABASE_USERNAME: ${DATABASE_USERNAME:-vapor_username}
+  DATABASE_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
 
 services:
   {{name}}:
@@ -21,27 +24,31 @@ services:
       context: .
     environment:
       <<: *shared_environment
+    depends_on:
+      - db
     command:
       - 'migrate'
     stdin_open: true
     tty: true
     deploy:
       replicas: 0 # use `docker service scale` to spin up.{{/fluent}}
+      restart_policy:
+        condition: on-failure
 
   {{#fluent.db.is_postgres}}db:
     image: postgres:12.1-alpine
     environment:
-      POSTGRES_USER: vapor_username
-      POSTGRES_PASSWORD: vapor_password
-      POSTGRES_DB: vapor_database
+      POSTGRES_USER: ${DATABASE_USERNAME:-vapor_username}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+      POSTGRES_DB: ${DATABASE_NAME:-vapor_database}
     ports:
       - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
   db:
     image: mysql:8.0
     environment:
-      MYSQL_USER: vapor_username
-      MYSQL_PASSWORD: vapor_password
-      MYSQL_DATABASE: vapor_database
+      MYSQL_USER: ${DATABASE_USERNAME:-vapor_username}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+      MYSQL_DATABASE: ${DATABASE_NAME:-vapor_database}
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
