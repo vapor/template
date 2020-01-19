@@ -1,11 +1,54 @@
-version: '2'
+version: '3.7'
 
 services:
-  db:
-    image: postgres:11
+  {{name}}:
+    image: {{name}}:latest
+    build:
+      context: .
+    {{#fluent}}depends_on:
+      - db{{/fluent}}
+    ports:
+      - '8080:80'
+
+  {{#fluent.db.is_postgres}}db:
+    image: postgres:12.1-alpine
     environment:
       POSTGRES_USER: vapor_username
-      POSTGRES_DB: vapor_database
       POSTGRES_PASSWORD: vapor_password
+      POSTGRES_DB: vapor_database
     ports:
-      - 5432:5432
+      - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_USER: vapor_username
+      MYSQL_PASSWORD: vapor_password
+      MYSQL_DATABASE: vapor_database
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    ports:
+      - '3306:3306'{{/fluent.db.is_mysql}}
+
+##
+## Building
+##
+## - `docker-compose build`
+##
+## https://docs.docker.com/compose/reference/build/
+
+##
+## Running Containers
+##
+## - `docker-compose up` to run all services.
+##
+## https://docs.docker.com/compose/reference/up/
+
+##
+## Running Services in Swarm (local or remote)
+##
+## - `docker swarm init` (run once)
+## - `docker stack deploy -c docker-compose.yml <stack-name>` to deploy a stack with whatever name you want.
+## - `docker service ls` to see running services.
+## - `docker service logs -f <service-name>` to tail logs for a service.
+## - `docker stack rm <stack-name>` to bring the stack down.
+##
+## https://docs.docker.com/engine/swarm/stack-deploy/
