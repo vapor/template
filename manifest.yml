@@ -68,5 +68,7 @@ files:
     dynamic: true
   - file: docker-compose.yml
     dynamic: true
+  - file: vapor-entrypoint.sh
+    dynamic: false
   - .gitignore
   - .dockerignore

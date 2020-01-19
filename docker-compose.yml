@@ -1,14 +1,32 @@
 version: '3.7'
 
+x-shared_environment: &shared_environment
+  LOG_LEVEL: ${LOG_LEVEL}
+
 services:
   {{name}}:
     image: {{name}}:latest
     build:
       context: .
+    environment:
+      <<: *shared_environment
     {{#fluent}}depends_on:
       - db{{/fluent}}
     ports:
       - '8080:80'
+
+  {{#fluent}}migrator:
+    image: {{name}}:latest
+    build:
+      context: .
+    environment:
+      <<: *shared_environment
+    command:
+      - 'migrate'
+    stdin_open: true
+    tty: true
+    deploy:
+      replicas: 0 # use `docker service scale` to spin up.{{/fluent}}
 
   {{#fluent.db.is_postgres}}db:
     image: postgres:12.1-alpine
