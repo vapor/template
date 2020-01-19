@@ -11,7 +11,7 @@ services:
       - '8080:80'
 
   {{#fluent.db.is_postgres}}db:
-    image: postgres:11.5-alpine
+    image: postgres:12.1-alpine
     environment:
       POSTGRES_USER: vapor_username
       POSTGRES_PASSWORD: vapor_password
@@ -27,3 +27,28 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
+
+##
+## Building
+##
+## - `docker-compose build`
+##
+## https://docs.docker.com/compose/reference/build/
+
+##
+## Running Containers
+##
+## - `docker-compose up` to run all services.
+##
+## https://docs.docker.com/compose/reference/up/
+
+##
+## Running Services in Swarm (local or remote)
+##
+## - `docker swarm init` (run once)
+## - `docker stack deploy -c docker-compose.yml <stack-name>` to deploy a stack with whatever name you want.
+## - `docker service ls` to see running services.
+## - `docker service logs -f <service-name>` to tail logs for a service.
+## - `docker stack rm <stack-name>` to bring the stack down.
+##
+## https://docs.docker.com/engine/swarm/stack-deploy/
