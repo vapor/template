@@ -27,7 +27,7 @@ COPY --from=build /build/.build/release /run
 # Copy Swift runtime libraries
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/
 # Copy entrypoint script
-COPY --from=build /build/vapor-entrypoint.sh /run/entrypoint.sh
+COPY --from=build /build/entrypoint.sh /run/entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80"]
