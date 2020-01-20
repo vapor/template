@@ -6,4 +6,4 @@ else
   LOG_ARG="--log $LOG_LEVEL"
 fi
 
-./Run $@ $LOG_ARG
+exec ./Run $@ $LOG_ARG

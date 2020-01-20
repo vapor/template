@@ -2,7 +2,7 @@ version: '3.7'
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL}
-  DATABASE_HOST: db
+  DATABASE_HOST: ${DATABASE_HOST:-db}
   DATABASE_NAME: ${DATABASE_NAME:-vapor_database}
   DATABASE_USERNAME: ${DATABASE_USERNAME:-vapor_username}
   DATABASE_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
