@@ -27,11 +27,9 @@ services:
       <<: *shared_environment
     depends_on:
       - db
-    entrypoint:
-      - '/bin/bash'
     command:
-      - '-c'
-      - "echo 'y' | ./Run migrate"
+      - 'migrate'
+      - '--yes'
     deploy:
       replicas: 0 # use `docker service scale --detach migrator=1` to spin up.{{/fluent}}
       restart_policy:
