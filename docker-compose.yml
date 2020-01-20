@@ -66,6 +66,7 @@ services:
 ## Running Containers
 ##
 ## - `docker-compose up` to run all services.
+## - `docker-compose up <service-name>[,...]` to run one or more services by name.
 ##
 ## https://docs.docker.com/compose/reference/up/
 
@@ -79,3 +80,12 @@ services:
 ## - `docker stack rm <stack-name>` to bring the stack down.
 ##
 ## https://docs.docker.com/engine/swarm/stack-deploy/
+
+##
+## Setting Environment Vars
+##
+## The commands above take certain environment vars from
+## the calling scope (or use defaults otherwise). You set them
+## manually by
+## 1. exporting them from the active shell: `export DATABASE_USERNAME=...`
+## 2. setting them inline with a command: `DATABASE_USERNAME=... docker-compose up db`
