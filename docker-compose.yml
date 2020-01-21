@@ -1,7 +1,5 @@
 version: '3.7'
 
-volumes:
-  {{#fluent.db.is_postgres}}pgdata:{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}mysql_data:{{/fluent.db.is_mysql}}
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL}
