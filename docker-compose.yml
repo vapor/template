@@ -1,7 +1,7 @@
 version: '3.7'
 
-volumes:{{#fluent.db.is_postgres}}
-  pgdata:{{/fluent.db.is_postgres}}
+volumes:{{#fluent}}
+  db_data:{{/fluent}}
 
 x-shared_environment: &shared_environment
   LOG_LEVEL: ${LOG_LEVEL}
@@ -41,7 +41,7 @@ services:
   {{#fluent.db.is_postgres}}db:
     image: postgres:12.1-alpine
     volumes:
-      - pgdata:/var/lib/postgresql/data/pgdata
+      - db_data:/var/lib/postgresql/data/pgdata
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
       POSTGRES_USER: ${DATABASE_USERNAME:-vapor_username}
@@ -52,7 +52,7 @@ services:
   db:
     image: mysql:8.0
     volumes:
-      - mysql_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_USER: ${DATABASE_USERNAME:-vapor_username}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
