@@ -1,29 +1,62 @@
 version: '3.7'
 
+volumes:{{#fluent}}
+  db_data:{{/fluent}}
+
+x-shared_environment: &shared_environment
+  LOG_LEVEL: ${LOG_LEVEL}
+  DATABASE_HOST: ${DATABASE_HOST:-db}
+  DATABASE_NAME: ${DATABASE_NAME:-vapor_database}
+  DATABASE_USERNAME: ${DATABASE_USERNAME:-vapor_username}
+  DATABASE_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+
 services:
   {{name}}:
     image: {{name}}:latest
     build:
       context: .
+    environment:
+      <<: *shared_environment
     {{#fluent}}depends_on:
       - db{{/fluent}}
     ports:
       - '8080:80'
 
+  {{#fluent}}migrator:
+    image: {{name}}:latest
+    build:
+      context: .
+    environment:
+      <<: *shared_environment
+    depends_on:
+      - db
+    command:
+      - 'migrate'
+      - '--yes'
+    deploy:
+      replicas: 0 # use `docker service scale --detach migrator=1` to spin up.{{/fluent}}
+      restart_policy:
+        condition: none
+
   {{#fluent.db.is_postgres}}db:
     image: postgres:12.1-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/pgdata
     environment:
-      POSTGRES_USER: vapor_username
-      POSTGRES_PASSWORD: vapor_password
-      POSTGRES_DB: vapor_database
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: ${DATABASE_USERNAME:-vapor_username}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+      POSTGRES_DB: ${DATABASE_NAME:-vapor_database}
     ports:
       - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
   db:
-    image: mysql:8.0
+    image: mysql/mysql-server:8.0
+    volumes:
+      - db_data:/var/lib/mysql
     environment:
-      MYSQL_USER: vapor_username
-      MYSQL_PASSWORD: vapor_password
-      MYSQL_DATABASE: vapor_database
+      MYSQL_USER: ${DATABASE_USERNAME:-vapor_username}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+      MYSQL_DATABASE: ${DATABASE_NAME:-vapor_database}
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
@@ -39,6 +72,7 @@ services:
 ## Running Containers
 ##
 ## - `docker-compose up` to run all services.
+## - `docker-compose up <service-name>[,...]` to run one or more services by name.
 ##
 ## https://docs.docker.com/compose/reference/up/
 
@@ -52,3 +86,12 @@ services:
 ## - `docker stack rm <stack-name>` to bring the stack down.
 ##
 ## https://docs.docker.com/engine/swarm/stack-deploy/
+
+##
+## Setting Environment Vars
+##
+## The commands above take certain environment vars from
+## the calling scope (or use defaults otherwise). You set them
+## manually by
+## 1. exporting them from the active shell: `export DATABASE_USERNAME=...`
+## 2. setting them inline with a command: `DATABASE_USERNAME=... docker-compose up db`

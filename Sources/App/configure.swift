@@ -8,15 +8,15 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory)){{#fluent}}
 
     {{#fluent.db.is_postgres}}app.databases.use(.postgres(
-        hostname: "localhost",
-        username: "vapor",
-        password: "vapor",
-        database: "vapor"
+        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
+        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
+        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
+        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}app.databases.use(.mysql(
-        hostname: "localhost",
-        username: "vapor",
-        password: "vapor",
-        database: "vapor"
+        hostname: Environment.get("DATABASE_HOST") ?? "localhost",
+        username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
+        password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
+        database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
 
     app.migrations.add(CreateTodo()){{/fluent}}
