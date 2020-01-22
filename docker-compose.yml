@@ -1,3 +1,17 @@
+# Docker Compose file for Vapor
+#
+# Install Docker on your system to easily run and test
+# your Vapor app in a production-like environment.
+#
+# Learn more: https://docs.docker.com/compose/reference/
+#
+#   Build images: docker-compose build
+#      Start app: docker-compose up {{name}}{{#fluent}}
+# Start database: docker-compose up db
+# Run migrations: docker-compose up migrate{{/fluent}}
+#       Stop all: docker-compose down{{#fluent}} (add -v to wipe db){{/fluent}}
+#     Debug logs: export LOG_LEVEL=debug
+#
 version: '3.7'
 
 volumes:{{#fluent}}
@@ -16,13 +30,13 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment
-    {{#fluent}}depends_on:
+      <<: *shared_environment{{#fluent}}
+    depends_on:
       - db{{/fluent}}
     ports:
       - '8080:80'
-
-  {{#fluent}}migrator:
+    command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80", "--log", $LOG_LEVEL]{{#fluent}}
+  migrate:
     image: {{name}}:latest
     build:
       context: .
@@ -30,15 +44,17 @@ services:
       <<: *shared_environment
     depends_on:
       - db
-    command:
-      - 'migrate'
-      - '--yes'
-    deploy:
-      replicas: 0 # use `docker service scale --detach migrator=1` to spin up.{{/fluent}}
-      restart_policy:
-        condition: none
-
-  {{#fluent.db.is_postgres}}db:
+    command: ["migrate", "--yes", "--log", $LOG_LEVEL]  
+  revert:
+    image: {{name}}:latest
+    build:
+      context: .
+    environment:
+      <<: *shared_environment
+    depends_on:
+      - db
+    command: ["migrate", "--revert", "--yes", "--log", $LOG_LEVEL]{{/fluent}}{{#fluent.db.is_postgres}}
+  db:
     image: postgres:12.1-alpine
     volumes:
       - db_data:/var/lib/postgresql/data/pgdata
@@ -60,38 +76,3 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
-
-##
-## Building
-##
-## - `docker-compose build`
-##
-## https://docs.docker.com/compose/reference/build/
-
-##
-## Running Containers
-##
-## - `docker-compose up` to run all services.
-## - `docker-compose up <service-name>[,...]` to run one or more services by name.
-##
-## https://docs.docker.com/compose/reference/up/
-
-##
-## Running Services in Swarm (local or remote)
-##
-## - `docker swarm init` (run once)
-## - `docker stack deploy -c docker-compose.yml <stack-name>` to deploy a stack with whatever name you want.
-## - `docker service ls` to see running services.
-## - `docker service logs -f <service-name>` to tail logs for a service.
-## - `docker stack rm <stack-name>` to bring the stack down.
-##
-## https://docs.docker.com/engine/swarm/stack-deploy/
-
-##
-## Setting Environment Vars
-##
-## The commands above take certain environment vars from
-## the calling scope (or use defaults otherwise). You set them
-## manually by
-## 1. exporting them from the active shell: `export DATABASE_USERNAME=...`
-## 2. setting them inline with a command: `DATABASE_USERNAME=... docker-compose up db`
