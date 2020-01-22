@@ -68,7 +68,5 @@ files:
     dynamic: true
   - file: docker-compose.yml
     dynamic: true
-  - file: entrypoint.sh
-    dynamic: false
   - .gitignore
   - .dockerignore
