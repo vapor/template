@@ -12,9 +12,9 @@
 #       Stop all: docker-compose down{{#fluent}} (add -v to wipe db){{/fluent}}
 #     Debug logs: export LOG_LEVEL=debug
 #
-version: '3.7'
+version: '3.7'{{#fluent}}
 
-volumes:{{#fluent}}
+volumes:
   db_data:{{/fluent}}
 
 x-shared_environment: &shared_environment
