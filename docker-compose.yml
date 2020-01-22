@@ -1,6 +1,6 @@
 # Docker Compose file for Vapor
 #
-# Install Docker on your system to easily run and test
+# Install Docker on your system to run and test
 # your Vapor app in a production-like environment.
 #
 # Learn more: https://docs.docker.com/compose/reference/
