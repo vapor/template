@@ -47,7 +47,9 @@ services:
       <<: *shared_environment
     depends_on:
       - db
-    command: ["migrate", "--yes", "--log", $LOG_LEVEL]  
+    command: ["migrate", "--yes", "--log", $LOG_LEVEL]
+    deploy:
+      replicas: 0
   revert:
     image: {{name}}:latest
     build:
@@ -57,6 +59,8 @@ services:
     depends_on:
       - db
     command: ["migrate", "--revert", "--yes", "--log", $LOG_LEVEL]{{/fluent}}{{#fluent.db.is_postgres}}
+    deploy:
+      replicas: 0
   db:
     image: postgres:12.1-alpine
     volumes:
