@@ -1,19 +1,18 @@
 # Docker Compose file for Vapor
 #
-# IMPORTANT: This file is not intended to suggest 
-#   best practices for a production deploy!
-#
 # Install Docker on your system to run and test
 # your Vapor app in a production-like environment.
+#
+# Note: This file is intended for testing and does not 
+# implement best practices for a production deployment.
 #
 # Learn more: https://docs.docker.com/compose/reference/
 #
 #   Build images: docker-compose build
-#      Start app: docker-compose up {{name}}{{#fluent}}
+#      Start app: docker-compose up app{{#fluent}}
 # Start database: docker-compose up db
 # Run migrations: docker-compose up migrate{{/fluent}}
 #       Stop all: docker-compose down{{#fluent}} (add -v to wipe db){{/fluent}}
-#     Debug logs: export LOG_LEVEL=debug
 #
 version: '3.7'{{#fluent}}
 
@@ -21,14 +20,14 @@ volumes:
   db_data:{{/fluent}}
 
 x-shared_environment: &shared_environment
-  LOG_LEVEL: ${LOG_LEVEL:-info}
-  DATABASE_HOST: ${DATABASE_HOST:-db}
-  DATABASE_NAME: ${DATABASE_NAME:-vapor_database}
-  DATABASE_USERNAME: ${DATABASE_USERNAME:-vapor_username}
-  DATABASE_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
+  LOG_LEVEL: debug
+  DATABASE_HOST: db
+  DATABASE_NAME: vapor_database
+  DATABASE_USERNAME: vapor_username
+  DATABASE_PASSWORD: vapor_password
 
 services:
-  {{name}}:
+  app:
     image: {{name}}:latest
     build:
       context: .
@@ -38,7 +37,7 @@ services:
       - db{{/fluent}}
     ports:
       - '8080:80'
-    command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80", "--log", $LOG_LEVEL]{{#fluent}}
+    command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "80"]{{#fluent}}
   migrate:
     image: {{name}}:latest
     build:
@@ -47,7 +46,7 @@ services:
       <<: *shared_environment
     depends_on:
       - db
-    command: ["migrate", "--yes", "--log", $LOG_LEVEL]
+    command: ["migrate", "--yes"]
     deploy:
       replicas: 0
   revert:
@@ -58,7 +57,7 @@ services:
       <<: *shared_environment
     depends_on:
       - db
-    command: ["migrate", "--revert", "--yes", "--log", $LOG_LEVEL]{{/fluent}}{{#fluent.db.is_postgres}}
+    command: ["migrate", "--revert", "--yes"]{{/fluent}}{{#fluent.db.is_postgres}}
     deploy:
       replicas: 0
   db:
@@ -67,9 +66,9 @@ services:
       - db_data:/var/lib/postgresql/data/pgdata
     environment:
       PGDATA: /var/lib/postgresql/data/pgdata
-      POSTGRES_USER: ${DATABASE_USERNAME:-vapor_username}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
-      POSTGRES_DB: ${DATABASE_NAME:-vapor_database}
+      POSTGRES_USER: vapor_username
+      POSTGRES_PASSWORD: vapor_password
+      POSTGRES_DB: vapor_database
     ports:
       - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
   db:
@@ -77,9 +76,9 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     environment:
-      MYSQL_USER: ${DATABASE_USERNAME:-vapor_username}
-      MYSQL_PASSWORD: ${DATABASE_PASSWORD:-vapor_password}
-      MYSQL_DATABASE: ${DATABASE_NAME:-vapor_database}
+      MYSQL_USER: vapor_username
+      MYSQL_PASSWORD: vapor_password
+      MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
       - '3306:3306'{{/fluent.db.is_mysql}}
