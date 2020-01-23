@@ -1,5 +1,8 @@
 # Docker Compose file for Vapor
 #
+# IMPORTANT: This file is not intended to suggest 
+#   best practices for a production deploy!
+#
 # Install Docker on your system to run and test
 # your Vapor app in a production-like environment.
 #
