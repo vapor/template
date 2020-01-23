@@ -66,7 +66,7 @@ services:
     ports:
       - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
   db:
-    image: mysql/mysql-server:8.0
+    image: mysql:8.0
     volumes:
       - db_data:/var/lib/mysql
     environment:
