@@ -1,10 +1,10 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 import PackageDescription
 
 let package = Package(
     name: "{{name}}",
     platforms: [
-       .macOS(.v10_14)
+       .macOS(.v10_15)
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
