@@ -1,10 +1,10 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.2
 import PackageDescription
 
 let package = Package(
     name: "{{name}}",
     platforms: [
-       .macOS(.v10_14)
+       .macOS(.v10_15)
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
@@ -14,11 +14,14 @@ let package = Package(
     ],
     targets: [
         .target(name: "App", dependencies: [{{#fluent}}
-            "Fluent", 
-            "Fluent{{fluent.db.module}}Driver",{{/fluent}}
+            .product(name: "Fluent", package: "fluent"),
+            .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
             "Vapor"
         ]),
         .target(name: "Run", dependencies: ["App"]),
-        .testTarget(name: "AppTests", dependencies: ["App", "XCTVapor"])
+        .testTarget(name: "AppTests", dependencies: [
+            .target(name: "App"),
+            .product(name: "XCTVapor", package: "vapor"),
+        ])
     ]
 )

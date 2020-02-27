@@ -15,6 +15,6 @@
         <img src="https://circleci.com/gh/vapor/api-template.svg?style=shield" alt="Continuous Integration">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5-brightgreen.svg" alt="Swift 5">
+        <img src="http://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
     </a>
 </p>
