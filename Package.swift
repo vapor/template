@@ -14,11 +14,14 @@ let package = Package(
     ],
     targets: [
         .target(name: "App", dependencies: [{{#fluent}}
-            "Fluent", 
-            "Fluent{{fluent.db.module}}Driver",{{/fluent}}
+            .product(name: "Fluent", package: "fluent"),
+            .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
             "Vapor"
         ]),
         .target(name: "Run", dependencies: ["App"]),
-        .testTarget(name: "AppTests", dependencies: ["App", "XCTVapor"])
+        .testTarget(name: "AppTests", dependencies: [
+            .target(name: "App"),
+            .product(name: "XCTVapor", package: "vapor"),
+        ])
     ]
 )
