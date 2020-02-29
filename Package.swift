@@ -16,7 +16,7 @@ let package = Package(
         .target(name: "App", dependencies: [{{#fluent}}
             .product(name: "Fluent", package: "fluent"),
             .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
-            . product(name: "Vapor", package: "vapor")
+            .product(name: "Vapor", package: "vapor")
         ]),
         .target(name: "Run", dependencies: ["App"]),
         .testTarget(name: "AppTests", dependencies: [
