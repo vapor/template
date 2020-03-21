@@ -29,8 +29,6 @@ COPY --from=build /build/.build/release /run
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/
 # Uncomment the next line if you need to load resources from the `Public` directory
 #COPY --from=build /build/Public /run/Public
-# Uncommand the next line if you are using Leaf
-#COPY --from=build /build/Resources /run/Resources
 
 ENTRYPOINT ["./Run"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0"]
