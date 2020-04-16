@@ -2,14 +2,21 @@
 # Build image
 # ================================
 FROM vapor/swift:5.2 as build
-WORKDIR /build
-
-# Copy entire repo into container
-COPY . .{{#fluent.db.is_sqlite}}
+WORKDIR /build{{#fluent.db.is_sqlite}}
 
 # Install sqlite3
 RUN apt-get update -y \
 	&& apt-get install -y libsqlite3-dev{{/fluent.db.is_sqlite}}
+
+# First just resolve dependencies.
+# This creates a cached layer that can be reused 
+# as long as your Package.swift/Package.resolved
+# files do not change.
+COPY ./Package.* ./
+RUN swift package resolve
+
+# Copy entire repo into container
+COPY . .
 
 # Compile with optimizations
 RUN swift build \
