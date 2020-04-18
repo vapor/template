@@ -64,6 +64,7 @@ files:
       - folder: AppTests
         files:
           - AppTests.swift
+      - LinuxMain.swift
   - file: Dockerfile
     dynamic: true
   - file: docker-compose.yml
