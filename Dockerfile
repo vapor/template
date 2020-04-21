@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM vapor/swift:5.2 as build
+FROM vapor/swift:latest as build
 WORKDIR /build{{#fluent.db.is_sqlite}}
 
 # Install sqlite3
