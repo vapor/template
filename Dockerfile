@@ -30,12 +30,16 @@ RUN swift build \
 FROM vapor/ubuntu:18.04
 WORKDIR /run
 
+RUN adduser vapor
+
 # Copy build artifacts
-COPY --from=build /build/.build/release /run
+COPY --from=build --chown=vapor /build/.build/release /run
 # Copy Swift runtime libraries
 COPY --from=build /usr/lib/swift/ /usr/lib/swift/
 # Uncomment the next line if you need to load resources from the `Public` directory
-#COPY --from=build /build/Public /run/Public
+#COPY --from=build --chown=vapor /build/Public /run/Public
+
+USER vapor
 
 ENTRYPOINT ["./Run"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0"]
