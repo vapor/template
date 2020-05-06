@@ -1,15 +1,16 @@
 # ================================
 # Build image
 # ================================
-FROM vapor/swift:latest as build
+FROM swift:5.2-bionic as build
 WORKDIR /build{{#fluent.db.is_sqlite}}
 
 # Install sqlite3
 RUN apt-get update -y \
-	&& apt-get install -y libsqlite3-dev{{/fluent.db.is_sqlite}}
+	&& apt-get install -y libsqlite3-dev \
+	&& rm -rf /var/lib/apt/lists/*{{/fluent.db.is_sqlite}}
 
 # First just resolve dependencies.
-# This creates a cached layer that can be reused 
+# This creates a cached layer that can be reused
 # as long as your Package.swift/Package.resolved
 # files do not change.
 COPY ./Package.* ./
@@ -19,22 +20,16 @@ RUN swift package resolve
 COPY . .
 
 # Compile with optimizations
-RUN swift build \
-	--enable-test-discovery \
-	-c release \
-	-Xswiftc -g
+RUN swift build --enable-test-discovery -c release
 
 # ================================
 # Run image
 # ================================
-FROM vapor/ubuntu:18.04
+FROM swift:5.2-bionic-slim
+WORKDIR /app
 
-RUN useradd --user-group --create-home --base-dir / vapor
+RUN useradd --user-group --home-dir /app vapor
 
-WORKDIR /vapor
-
-# Copy Swift runtime libraries
-COPY --from=build /usr/lib/swift/ /usr/lib/swift/
 # Copy build artifacts
 COPY --from=build --chown=vapor /build/.build/release .
 # Uncomment the next line if you need to load resources from the `Public` directory
