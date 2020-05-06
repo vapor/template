@@ -32,9 +32,9 @@ RUN useradd --user-group --create-home --home-dir /app vapor
 WORKDIR /app
 
 # Copy build artifacts
-COPY --from=build --chown=vapor /build/.build/release .
+COPY --from=build --chown=vapor /build/.build/release /app
 # Uncomment the next line if you need to load resources from the `Public` directory
-#COPY --from=build --chown=vapor /build/Public ./Public
+#COPY --from=build --chown=vapor /build/Public /app/Public
 
 USER vapor
 
