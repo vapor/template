@@ -26,9 +26,10 @@ RUN swift build --enable-test-discovery -c release
 # Run image
 # ================================
 FROM swift:5.2-bionic-slim
-WORKDIR /app
 
-RUN useradd --user-group --home-dir /app vapor
+RUN useradd --user-group --create-home --home-dir /app vapor
+
+WORKDIR /app
 
 # Copy build artifacts
 COPY --from=build --chown=vapor /build/.build/release .
