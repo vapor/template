@@ -27,6 +27,7 @@ RUN swift build --enable-test-discovery -c release
 # ================================
 FROM swift:5.2-bionic-slim
 
+# Create a vapor user and group with /app as its home directory
 RUN useradd --user-group --create-home --home-dir /app vapor
 
 WORKDIR /app
