@@ -37,6 +37,7 @@ COPY --from=build --chown=vapor:vapor /build/.build/release /app
 # Uncomment the next line if you need to load resources from the `Public` directory
 #COPY --from=build --chown=vapor:vapor /build/Public /app/Public
 
+# Ensure all further commands run as the vapor user
 USER vapor
 
 # Start the Vapor service when the image is run, default to listening on 8080 in production environment 
