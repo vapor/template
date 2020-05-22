@@ -10,8 +10,5 @@ func routes(_ app: Application) throws {
         return "Hello, world!"
     }{{#fluent}}
 
-    let todoController = TodoController()
-    app.get("todos", use: todoController.index)
-    app.post("todos", use: todoController.create)
-    app.delete("todos", ":todoID", use: todoController.delete){{/fluent}}
+    try app.register(collection: TodoController()){{/fluent}}
 }
