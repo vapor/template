@@ -28,8 +28,9 @@ RUN swift build --enable-test-discovery -c release
 FROM swift:5.2-bionic-slim
 
 # Create a vapor user and group with /app as its home directory
-RUN useradd --user-group --create-home --home-dir /app vapor
+RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app vapor
 
+# Switch to the new home directory
 WORKDIR /app
 
 # Copy build artifacts
@@ -38,7 +39,7 @@ COPY --from=build --chown=vapor:vapor /build/.build/release /app
 #COPY --from=build --chown=vapor:vapor /build/Public /app/Public
 
 # Ensure all further commands run as the vapor user
-USER vapor
+USER vapor:vapor
 
 # Start the Vapor service when the image is run, default to listening on 8080 in production environment 
 ENTRYPOINT ["./Run"]
