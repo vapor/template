@@ -17,7 +17,7 @@ public func configure(_ app: Application) throws {
         username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
-    ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
+    ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}{{#fluent.db.is_mongo}}app.databases.use(.mongo(connectionString: Environment.get("DATABASE_URL") ?? "mongodb://localhost:27017"), as: .mongo){{/fluent.db.is_mongo}}
 
     app.migrations.add(CreateTodo()){{/fluent}}
 

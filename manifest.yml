@@ -16,22 +16,30 @@ variables:
               id: psql
               version: "2.0.0"
               is_postgres: true
-          - name: MySQL
+          - name: MySQL (beta)
             description: ""
             data:
               module: MySQL
               url: mysql
               id: mysql
-              version: "4.0.0"
+              version: "4.0.0-rc"
               is_mysql: true
-          - name: SQLite
+          - name: SQLite (beta)
             description: ""
             data:
               module: SQLite
               url: sqlite
               id: sqlite
-              version: "4.0.0"
+              version: "4.0.0-rc"
               is_sqlite: true
+          - name: Mongo (beta)
+            description: ""
+            data:
+              module: Mongo
+              url: mongo
+              id: mongo
+              version: "1.0.0-rc"
+              is_mongo: true
 files:
   - file: Package.swift
     dynamic: true
