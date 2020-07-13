@@ -14,7 +14,7 @@
 # Run migrations: docker-compose up migrate{{/db.is_sqlite}}{{/fluent}}
 #       Stop all: docker-compose down{{#fluent}}{{^db.is_sqlite}} (add -v to wipe db){{/db.is_sqlite}}{{/fluent}}
 #
-version: '3.7'{{#fluent}}{{db.is_sqlite}}
+version: '3.7'{{#fluent}}{{^db.is_sqlite}}
 
 volumes:
   db_data:{{/db.is_sqlite}}{{/fluent}}
@@ -32,7 +32,7 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{#fluent}}{{^fdb.is_sqlite}}
+      <<: *shared_environment{{#fluent}}{{^db.is_sqlite}}
     depends_on:
       - db{{/db.is_sqlite}}{{/fluent}}
     ports:
