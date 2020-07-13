@@ -9,22 +9,22 @@
 # Learn more: https://docs.docker.com/compose/reference/
 #
 #   Build images: docker-compose build
-#      Start app: docker-compose up app{{#fluent}}
+#      Start app: docker-compose up app{{#fluent}}{{^fluent.db.is_sqlite}}
 # Start database: docker-compose up db
-# Run migrations: docker-compose up migrate{{/fluent}}
-#       Stop all: docker-compose down{{#fluent}} (add -v to wipe db){{/fluent}}
+# Run migrations: docker-compose up migrate{{/fluent.db.is_sqlite}}{{/fluent}}
+#       Stop all: docker-compose down{{#fluent}}{{^fluent.db.is_sqlite}} (add -v to wipe db){{/fluent.db.is_sqlite}}{{/fluent}}
 #
-version: '3.7'{{#fluent}}
+version: '3.7'{{#fluent}}{{^fluent.db.is_sqlite}}
 
 volumes:
-  db_data:{{/fluent}}
+  db_data:{{/fluent.db.is_sqlite}}{{/fluent}}
 
 x-shared_environment: &shared_environment
-  LOG_LEVEL: ${LOG_LEVEL:-debug}
+  LOG_LEVEL: ${LOG_LEVEL:-debug}{{#fluent}}{{^fluent.db.is_sqlite}}
   DATABASE_HOST: db
   DATABASE_NAME: vapor_database
   DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password
+  DATABASE_PASSWORD: vapor_password{{/fluent.db.is_sqlite}}{{/fluent}}
 
 services:
   app:
@@ -32,9 +32,9 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{#fluent}}
+      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
     depends_on:
-      - db{{/fluent}}
+      - db{{/fluent.db.is_sqlite}}{{/fluent}}
     ports:
       - '8080:8080'
 #    user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
@@ -44,9 +44,9 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment
+      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
     depends_on:
-      - db
+      - db{{/fluent.db.is_sqlite}}{{/fluent}}
     command: ["migrate", "--yes"]
     deploy:
       replicas: 0
@@ -55,12 +55,12 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment
+      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
     depends_on:
-      - db
-    command: ["migrate", "--revert", "--yes"]{{/fluent}}{{#fluent.db.is_postgres}}
+      - db{{/fluent.db.is_sqlite}}{{/fluent}}
+    command: ["migrate", "--revert", "--yes"]
     deploy:
-      replicas: 0
+      replicas: 0{{/fluent}}{{#fluent.db.is_postgres}}
   db:
     image: postgres:12-alpine
     volumes:
