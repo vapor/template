@@ -9,22 +9,22 @@
 # Learn more: https://docs.docker.com/compose/reference/
 #
 #   Build images: docker-compose build
-#      Start app: docker-compose up app{{#fluent}}{{^fluent.db.is_sqlite}}
+#      Start app: docker-compose up app{{#fluent}}{{^db.is_sqlite}}
 # Start database: docker-compose up db
-# Run migrations: docker-compose up migrate{{/fluent.db.is_sqlite}}{{/fluent}}
-#       Stop all: docker-compose down{{#fluent}}{{^fluent.db.is_sqlite}} (add -v to wipe db){{/fluent.db.is_sqlite}}{{/fluent}}
+# Run migrations: docker-compose up migrate{{/db.is_sqlite}}{{/fluent}}
+#       Stop all: docker-compose down{{#fluent}}{{^db.is_sqlite}} (add -v to wipe db){{/db.is_sqlite}}{{/fluent}}
 #
-version: '3.7'{{#fluent}}{{^fluent.db.is_sqlite}}
+version: '3.7'{{#fluent}}{{db.is_sqlite}}
 
 volumes:
-  db_data:{{/fluent.db.is_sqlite}}{{/fluent}}
+  db_data:{{/db.is_sqlite}}{{/fluent}}
 
 x-shared_environment: &shared_environment
-  LOG_LEVEL: ${LOG_LEVEL:-debug}{{#fluent}}{{^fluent.db.is_sqlite}}
+  LOG_LEVEL: ${LOG_LEVEL:-debug}{{#fluent}}{{^db.is_sqlite}}
   DATABASE_HOST: db
   DATABASE_NAME: vapor_database
   DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password{{/fluent.db.is_sqlite}}{{/fluent}}
+  DATABASE_PASSWORD: vapor_password{{/db.is_sqlite}}{{/fluent}}
 
 services:
   app:
@@ -32,9 +32,9 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
+      <<: *shared_environment{{#fluent}}{{^fdb.is_sqlite}}
     depends_on:
-      - db{{/fluent.db.is_sqlite}}{{/fluent}}
+      - db{{/db.is_sqlite}}{{/fluent}}
     ports:
       - '8080:8080'
 #    user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
@@ -44,9 +44,9 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{^fluent.db.is_sqlite}}
+      <<: *shared_environment{{^db.is_sqlite}}
     depends_on:
-      - db{{/fluent.db.is_sqlite}}
+      - db{{/db.is_sqlite}}
     command: ["migrate", "--yes"]
     deploy:
       replicas: 0
@@ -55,12 +55,12 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{^fluent.db.is_sqlite}}
+      <<: *shared_environment{{^db.is_sqlite}}
     depends_on:
-      - db{{/fluent.db.is_sqlite}}
+      - db{{/db.is_sqlite}}
     command: ["migrate", "--revert", "--yes"]
     deploy:
-      replicas: 0{{#fluent.db.is_postgres}}
+      replicas: 0{{#db.is_postgres}}
   db:
     image: postgres:12-alpine
     volumes:
@@ -71,7 +71,7 @@ services:
       POSTGRES_PASSWORD: vapor_password
       POSTGRES_DB: vapor_database
     ports:
-      - '5432:5432'{{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}
+      - '5432:5432'{{/db.is_postgres}}{{#db.is_mysql}}
   db:
     image: mysql:8.0
     volumes:
@@ -82,4 +82,4 @@ services:
       MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - '3306:3306'{{/fluent.db.is_mysql}}{{/fluent}}
+      - '3306:3306'{{/db.is_mysql}}{{/fluent}}
