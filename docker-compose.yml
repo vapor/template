@@ -44,9 +44,9 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
+      <<: *shared_environment{{^fluent.db.is_sqlite}}
     depends_on:
-      - db{{/fluent.db.is_sqlite}}{{/fluent}}
+      - db{{/fluent.db.is_sqlite}}
     command: ["migrate", "--yes"]
     deploy:
       replicas: 0
@@ -55,12 +55,12 @@ services:
     build:
       context: .
     environment:
-      <<: *shared_environment{{#fluent}}{{^fluent.db.is_sqlite}}
+      <<: *shared_environment{{^fluent.db.is_sqlite}}
     depends_on:
-      - db{{/fluent.db.is_sqlite}}{{/fluent}}
+      - db{{/fluent.db.is_sqlite}}
     command: ["migrate", "--revert", "--yes"]
     deploy:
-      replicas: 0{{/fluent}}{{#fluent.db.is_postgres}}
+      replicas: 0{{#fluent.db.is_postgres}}
   db:
     image: postgres:12-alpine
     volumes:
@@ -82,4 +82,4 @@ services:
       MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - '3306:3306'{{/fluent.db.is_mysql}}
+      - '3306:3306'{{/fluent.db.is_mysql}}{{/fluent}}
