@@ -1,13 +1,16 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.2-bionic as build
-WORKDIR /build{{#fluent.db.is_sqlite}}
+FROM swift:5.2-focal as build
 
-# Install sqlite3
-RUN apt-get update -y \
-	&& apt-get install -y libsqlite3-dev \
-	&& rm -rf /var/lib/apt/lists/*{{/fluent.db.is_sqlite}}
+# Install OS updates and, if needed, sqlite3
+RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
+    && apt-get -q update \
+    && apt-get -q dist-upgrade -y {{#fluent.db.is_sqlite}}\
+    && apt-get install -y libsqlite3-dev {{/fluent.db.is_sqlite}}\
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
 
 # First just resolve dependencies.
 # This creates a cached layer that can be reused
@@ -22,10 +25,23 @@ COPY . .
 # Compile with optimizations
 RUN swift build --enable-test-discovery -c release
 
+# Switch to the staging area
+WORKDIR /staging
+
+# Copy main executable to staging area
+RUN cp "$(swift build --package-path /build -c release --show-bin-path)/Run" ./
+
+# Uncomment the next line if you need to load resources from the `Public` directory.
+#RUN mv Public /staging/Public
+
 # ================================
 # Run image
 # ================================
-FROM swift:5.2-bionic-slim
+FROM swift:5.2-focal-slim
+
+# Make sure all system packages are up to date.
+RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && \
+    apt-get -q update && apt-get -q dist-upgrade -y && rm -r /var/lib/apt/lists/*
 
 # Create a vapor user and group with /app as its home directory
 RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app vapor
@@ -33,10 +49,8 @@ RUN useradd --user-group --create-home --system --skel /dev/null --home-dir /app
 # Switch to the new home directory
 WORKDIR /app
 
-# Copy build artifacts
-COPY --from=build --chown=vapor:vapor /build/.build/release /app
-# Uncomment the next line if you need to load resources from the `Public` directory
-#COPY --from=build --chown=vapor:vapor /build/Public /app/Public
+# Copy built executable and any staged resources from builder
+COPY --from=build --chown=vapor:vapor /staging /app
 
 # Ensure all further commands run as the vapor user
 USER vapor:vapor
@@ -44,6 +58,6 @@ USER vapor:vapor
 # Let Docker bind to port 8080
 EXPOSE 8080
 
-# Start the Vapor service when the image is run, default to listening on 8080 in production environment 
+# Start the Vapor service when the image is run, default to listening on 8080 in production environment
 ENTRYPOINT ["./Run"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
