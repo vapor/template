@@ -32,7 +32,7 @@ WORKDIR /staging
 RUN cp "$(swift build --package-path /build -c release --show-bin-path)/Run" ./
 
 # Uncomment the next line if you need to load resources from the `Public` directory.
-#RUN mv Public /staging/Public
+#RUN mv /build/Public /staging/Public
 
 # ================================
 # Run image
