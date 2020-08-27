@@ -8,7 +8,7 @@ variables:
         description: Which database would you like to use?
         type: option
         options:
-          - name: Postgres
+          - name: Postgres (Recommended)
             description: ""
             data:
               module: Postgres
@@ -16,29 +16,29 @@ variables:
               id: psql
               version: "2.0.0"
               is_postgres: true
-          - name: MySQL (beta)
+          - name: MySQL
             description: ""
             data:
               module: MySQL
               url: mysql
               id: mysql
-              version: "4.0.0-rc"
+              version: "4.0.0"
               is_mysql: true
-          - name: SQLite (beta)
+          - name: SQLite
             description: ""
             data:
               module: SQLite
               url: sqlite
               id: sqlite
-              version: "4.0.0-rc"
+              version: "4.0.0"
               is_sqlite: true
-          - name: Mongo (beta)
+          - name: Mongo
             description: ""
             data:
               module: Mongo
               url: mongo
               id: mongo
-              version: "1.0.0-rc"
+              version: "1.0.0"
               is_mongo: true
 files:
   - file: Package.swift
