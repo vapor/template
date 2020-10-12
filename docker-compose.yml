@@ -11,7 +11,7 @@
 #   Build images: docker-compose build
 #      Start app: docker-compose up app{{#fluent}}{{^db.is_sqlite}}
 # Start database: docker-compose up db
-# Run migrations: docker-compose up migrate{{/db.is_sqlite}}{{/fluent}}
+# Run migrations: docker-compose run migrate{{/db.is_sqlite}}{{/fluent}}
 #       Stop all: docker-compose down{{#fluent}}{{^db.is_sqlite}} (add -v to wipe db){{/db.is_sqlite}}{{/fluent}}
 #
 version: '3.7'{{#fluent}}{{^db.is_sqlite}}
