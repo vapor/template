@@ -8,27 +8,15 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory)){{#fluent}}
 
     {{#fluent.db.is_postgres}}
-    let port: Int
-    if let portStr = Environment.get("DATABASE_PORT") {
-        guard let portInt = Int(portStr) else {
-            fatalError("DATABASE_PORT, if set, must be an integer value, not '\(portStr)'")
-        }
-
-        port = portInt
-    } else {
-        port = 5432
-    }
-    {{/fluent.db.is_postgres}}
-    
     {{#fluent.db.is_postgres}}app.databases.use(.postgres(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: port,
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 5432, // TODO: Add `PostgresConfiguration.ianaPortNumber` like MySQL has
         username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
     ), as: .psql){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}app.databases.use(.mysql(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-        port: port,
+        port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? MySQLConfiguration.ianaPortNumber,
         username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
         password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
         database: Environment.get("DATABASE_NAME") ?? "vapor_database"
