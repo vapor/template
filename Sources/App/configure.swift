@@ -1,6 +1,7 @@
 {{#fluent}}import Fluent
 import Fluent{{fluent.db.module}}Driver
-{{/fluent}}import Vapor
+{{/fluent}}{{#leaf}}import Leaf
+{{/leaf}}import Vapor
 
 // configures your application
 public func configure(_ app: Application) throws {
@@ -21,7 +22,11 @@ public func configure(_ app: Application) throws {
         connectionString: Environment.get("DATABASE_URL") ?? "mongodb://localhost:27017/vapor_database"
     ), as: .mongo){{/fluent.db.is_mongo}}{{#fluent.db.is_sqlite}}app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
 
-    app.migrations.add(CreateTodo()){{/fluent}}
+    app.migrations.add(CreateTodo()){{/fluent}}{{#leaf}}
+
+    app.views.use(.leaf)
+
+    {{/leaf}}
 
     // register routes
     try routes(app)
