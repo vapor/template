@@ -32,11 +32,11 @@ WORKDIR /staging
 # Copy main executable to staging area
 RUN cp "$(swift build --package-path /build -c release --show-bin-path)/Run" ./
 
-{{#fluent}}
+{{#leaf}}
 # Copy any resouces from the public directory and views directory
 RUN mv /build/Public ./Public && chmod -R a-w ./Public
 RUN mv /build/Resources ./Resources && chmod -R a-w ./Resources
-{{/fluent}}{{^fluent}}# Uncomment the next line if you need to load resources from the `Public` directory.
+{{/leaf}}{{^leaf}}# Uncomment the next line if you need to load resources from the `Public` directory.
 # Ensure that by default, neither the directory nor any of its contents are writable.
 #RUN mv /build/Public ./Public && chmod -R a-w ./Public{{\fluent}}
 
