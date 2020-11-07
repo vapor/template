@@ -7,7 +7,6 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory)){{#fluent}}
 
-    {{#fluent.db.is_postgres}}
     {{#fluent.db.is_postgres}}app.databases.use(.postgres(
         hostname: Environment.get("DATABASE_HOST") ?? "localhost",
         port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? 5432, // TODO: Add `PostgresConfiguration.ianaPortNumber` like MySQL has
