@@ -79,8 +79,10 @@ files:
     if: leaf
     files:
       - folder: Views
+        if: leaf
         files:
-          - index.leaf
+          - file: index.leaf
+            if: leaf
   - file: Dockerfile
     dynamic: true
   - file: docker-compose.yml
