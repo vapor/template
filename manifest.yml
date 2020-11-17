@@ -40,6 +40,9 @@ variables:
               id: mongo
               version: "1.0.0"
               is_mongo: true
+  - name: leaf
+    description: Would you like to use Leaf?
+    type: bool
 files:
   - file: Package.swift
     dynamic: true
@@ -72,6 +75,12 @@ files:
       - folder: AppTests
         files:
           - AppTests.swift
+  - folder: Resources
+    if: leaf
+    files:
+      - folder: Views
+        files:
+          - file: index.leaf
   - file: Dockerfile
     dynamic: true
   - file: docker-compose.yml
