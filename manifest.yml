@@ -41,7 +41,7 @@ variables:
               version: "1.0.0"
               is_mongo: true
   - name: leaf
-    description: Would you like to use Leaf
+    description: Would you like to use Leaf?
     type: bool
 files:
   - file: Package.swift
