@@ -33,8 +33,8 @@ WORKDIR /staging
 RUN cp "$(swift build --package-path /build -c release --show-bin-path)/Run" ./
 
 {{#leaf}}
-# Copy any resouces from the public directory and views directory
-RUN mv /build/Public ./Public && chmod -R a-w ./Public
+# Copy any resouces from the public directory and views directory if the directories exist
+RUN [ -d /build/Public ] && { mv /build/Public ./Public && chmod -R a-w ./Public; } || true
 RUN mv /build/Resources ./Resources && chmod -R a-w ./Resources
 {{/leaf}}{{^leaf}}# Uncomment the next line if you need to load resources from the `Public` directory.
 # Ensure that by default, neither the directory nor any of its contents are writable.
