@@ -28,7 +28,7 @@ x-shared_environment: &shared_environment
 
 services:
   app:
-    image: {{name_lower_kabab}}:latest
+    image: {{name_kebab}}:latest
     build:
       context: .
     environment:
@@ -40,7 +40,7 @@ services:
     # user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
     command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]{{#fluent}}
   migrate:
-    image: {{name_lower_kabab}}:latest
+    image: {{name_kebab}}:latest
     build:
       context: .
     environment:
@@ -51,7 +51,7 @@ services:
     deploy:
       replicas: 0
   revert:
-    image: {{name_lower_kabab}}:latest
+    image: {{name_kebab}}:latest
     build:
       context: .
     environment:
