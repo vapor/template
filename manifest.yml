@@ -75,6 +75,7 @@ files:
       - folder: AppTests
         files:
           - AppTests.swift
+      - file: LinuxMain.swift
   - folder: Resources
     if: leaf
     files:
