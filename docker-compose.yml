@@ -25,13 +25,14 @@ x-shared_environment: &shared_environment
   DATABASE_NAME: vapor_database
   DATABASE_USERNAME: vapor_username
   DATABASE_PASSWORD: vapor_password{{/db.is_sqlite}}{{/fluent}}
-
+  
 services:
   app:
     image: {{name_kebab}}:latest
     build:
       context: .
     environment:
+      DATABASE_URL: mongodb://db:27017/vapor_database
       <<: *shared_environment{{#fluent}}{{^db.is_sqlite}}
     depends_on:
       - db{{/db.is_sqlite}}{{/fluent}}
@@ -82,4 +83,11 @@ services:
       MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - '3306:3306'{{/db.is_mysql}}{{/fluent}}
+      - '3306:3306'{{/db.is_mysql}}{{#db.is_mongo}}
+  db:
+    image: mongo:latest
+    volumes:
+      - db_data:/data/db
+    restart: unless-stopped
+    ports:
+      - '27017:27017'{{/db.is_mongo}}{{/fluent}}
