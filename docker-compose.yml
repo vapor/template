@@ -20,12 +20,13 @@ volumes:
   db_data:{{/db.is_sqlite}}{{/fluent}}
 
 x-shared_environment: &shared_environment
-  LOG_LEVEL: ${LOG_LEVEL:-debug}{{#fluent}}{{^db.is_sqlite}}
+  LOG_LEVEL: ${LOG_LEVEL:-debug}{{#fluent}}{{^db.is_sqlite}}{{^db.is_mongo}}
   DATABASE_HOST: db
   DATABASE_NAME: vapor_database
   DATABASE_USERNAME: vapor_username
-  DATABASE_PASSWORD: vapor_password{{/db.is_sqlite}}{{/fluent}}
-
+  DATABASE_PASSWORD: vapor_password{{/db.is_mongo}}{{/db.is_sqlite}}{{#db.is_mongo}}
+  DATABASE_URL: mongodb://db:27017/vapor_database{{/db.is_mongo}}{{/fluent}}
+  
 services:
   app:
     image: {{name_kebab}}:latest
@@ -82,4 +83,11 @@ services:
       MYSQL_DATABASE: vapor_database
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
     ports:
-      - '3306:3306'{{/db.is_mysql}}{{/fluent}}
+      - '3306:3306'{{/db.is_mysql}}{{#db.is_mongo}}
+  db:
+    image: mongo:latest
+    volumes:
+      - db_data:/data/db
+    restart: unless-stopped
+    ports:
+      - '27017:27017'{{/db.is_mongo}}{{/fluent}}
