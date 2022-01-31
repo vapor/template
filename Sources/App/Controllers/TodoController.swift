@@ -11,19 +11,21 @@ struct TodoController: RouteCollection {
         }
     }
 
-    func index(req: Request) throws -> EventLoopFuture<[Todo]> {
-        return Todo.query(on: req.db).all()
+    func index(req: Request) async throws -> [Todo] {
+        return try await Todo.query(on: req.db).all()
     }
 
-    func create(req: Request) throws -> EventLoopFuture<Todo> {
+    func create(req: Request) async throws -> Todo {
         let todo = try req.content.decode(Todo.self)
-        return todo.save(on: req.db).map { todo }
+        try await todo.save(on: req.db)
+        return todo
     }
 
-    func delete(req: Request) throws -> EventLoopFuture<HTTPStatus> {
-        return Todo.find(req.parameters.get("todoID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { $0.delete(on: req.db) }
-            .transform(to: .ok)
+    func delete(req: Request) async throws -> HTTPStatus {
+        guard let todo = try await Todo.find(req.parameters.get("todoID"), on: req.db) else {
+                throw Abort(.notFound)
+            }
+        try await todo.delete(on: req.db)
+        return .ok
     }
 }
