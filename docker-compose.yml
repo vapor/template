@@ -30,6 +30,7 @@ x-shared_environment: &shared_environment
 services:
   app:
     image: {{name_kebab}}:latest
+    platform: linux/amd64
     build:
       context: .
     environment:
