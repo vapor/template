@@ -12,7 +12,7 @@ struct TodoController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [Todo] {
-        return try await Todo.query(on: req.db).all()
+       try await Todo.query(on: req.db).all()
     }
 
     func create(req: Request) async throws -> Todo {
