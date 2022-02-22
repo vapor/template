@@ -2,7 +2,7 @@ import Fluent
 
 struct CreateTodo: AsyncMigration {
     func prepare(on database: Database) async throws {
-        return try await database.schema("todos")
+       try await database.schema("todos")
             .id()
             .field("title", .string, .required)
             .create()
