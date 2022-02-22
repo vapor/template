@@ -9,6 +9,6 @@ struct CreateTodo: AsyncMigration {
     }
 
     func revert(on database: Database) async throws {
-        return try await database.schema("todos").delete()
+       try await database.schema("todos").delete()
     }
 }
