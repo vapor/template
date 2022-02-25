@@ -81,6 +81,9 @@ files:
       - folder: Views
         files:
           - file: index.leaf
+  - folder: Public
+    files:
+      - .gitkeep
   - file: Dockerfile
     dynamic: true
   - file: docker-compose.yml
