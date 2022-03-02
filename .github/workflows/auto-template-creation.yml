@@ -49,6 +49,11 @@ jobs:
       - name: Build toolbox
         run: swift build --enable-test-discovery -c debug
 
+      - name: Clone repository
+        uses: GuillaumeFalourd/clone-github-repo-action@v1
+        with:
+          owner: 'vapor'
+          repository: 'template-fluent-${{ matrix.repository }}'
         # Clone empty repository
         # Remove everything in repository except for the .git directory
         # rm -rf . !(.git)
@@ -56,7 +61,6 @@ jobs:
         # Commit and push the generated template to github
       - name: Generate templates
         run: |
-          git clone https://github.com/vapor/template-fluent-${{ matrix.repository }}.git
           cd template-fluent-${{ matrix.repository }}
 
           swift run --enable-test-discovery \
