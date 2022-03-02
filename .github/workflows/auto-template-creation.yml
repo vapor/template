@@ -19,24 +19,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        repositories: 
-          - https://github.com/vapor/template-fluent-bare.git
-          - https://github.com/vapor/template-fluent-postgres.git
-          - https://github.com/vapor/template-fluent-mysql.git
-          - https://github.com/vapor/template-fluent-postgres-leaf.git
-
-        fluentflags:
+        repository: 
+          - bare
+        fluentflag:
           - --no-fluent
-          - --fluent.db mysql
-          - --fluent.db postgres 
-        leafflags:
+        leafflag:
           - --no-leaf
-          - --leaf
-        exclude:
-          - fluentflags: --no-fluent
-            leafflags: --leaf
-          - fluentflags: --fluent.db mysql
-            leafflags: --leaf
+        include:
+          # MySQL setup
+          - fluentflag: --fluent.db mysql
+            leafflag: --no-leaf
+            repository: mysql
+          # Postgres setup
+          - fluentflag: --fluent.db postgres
+            leafflag: --no-leaf
+            repository: postgres
+          # Postgres setup with leaf
+          - fluentflag: --fluent.db postgres
+            leafflag: --leaf
+            repository: postgres-leaf
+
     runs-on: ubuntu-latest
     container: "swift:5.5-focal"
     steps:
@@ -46,6 +48,25 @@ jobs:
           repository: vapor/toolbox
       - name: Build toolbox
         run: swift build --enable-test-discovery -c debug
+
+        # Clone empty repository
+        # Remove everything in repository except for the .git directory
+        # Run vapor new in the repository directory
+        # Commit and push the generated template to github
+      - name: Generate templates
+        run: |
+          git clone https://github.com/vapor/template-fluent-${{ matrix.repository }}.git
+          cd template-fluent-${{ matrix.repository }}
+          ls -a
+
+          swift run --enable-test-discovery \
+            vapor new template-${{ matrix.repository }} \
+              --no-commit \
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
+          git push
       
               
   
