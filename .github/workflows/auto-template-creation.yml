@@ -64,7 +64,7 @@ jobs:
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
 
           cd template-${{ matrix.repository }}
-          rm -rf ".git"
+          ls -a
           cd ..
 
           git add .
