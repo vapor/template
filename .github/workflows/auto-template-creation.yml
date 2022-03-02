@@ -63,6 +63,10 @@ jobs:
               --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
 
+          cd template-${{ matrix.repository }}
+          rm -rf ".git"
+          cd ..
+
           git add .
           git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
           git push
