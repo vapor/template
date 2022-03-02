@@ -3,8 +3,49 @@
 # It should then push that generated template into the corresponding repositories
 
 # The repositories to be pushed to are
-# - https://github.com/vapor/template-fluent-postgres
-# - https://github.com/vapor/template-fluent-mysql
-# - https://github.com/vapor/template-fluent-postgres-leaf
-# - https://github.com/vapor/template-fluent-bare
+# - https://github.com/vapor/template-fluent-postgres.git
+# - https://github.com/vapor/template-fluent-mysql.git
+# - https://github.com/vapor/template-fluent-postgres-leaf.git
+# - https://github.com/vapor/template-fluent-bare.git
 
+name: Create templates
+on: 
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-templates:
+    strategy:
+      fail-fast: false
+      matrix:
+        repositories: 
+          - https://github.com/vapor/template-fluent-bare.git
+          - https://github.com/vapor/template-fluent-postgres.git
+          - https://github.com/vapor/template-fluent-mysql.git
+          - https://github.com/vapor/template-fluent-postgres-leaf.git
+
+        fluentflags:
+          - --no-fluent
+          - --fluent.db mysql
+          - --fluent.db postgres 
+        leafflags:
+          - --no-leaf
+          - --leaf
+        exclude:
+          - fluentflags: --no-fluent
+            leafflags: --leaf
+          - fluentflags: --fluent.db mysql
+            leafflags: --leaf
+    runs-on: ubuntu-latest
+    container: "swift:5.5-focal"
+    steps:
+      - name: Check out toolbox
+        uses: actions/checkout@v3.0.0
+        with:
+          repository: vapor/toolbox
+      - name: Build toolbox
+        run: swift build --enable-test-discovery -c debug
+      
+              
+  
