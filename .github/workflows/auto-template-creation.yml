@@ -1,0 +1,10 @@
+# Run this action everytime a change has been made to the main branch
+# This action should build the vapor toolbox and then run vapor new for every database option (except sqlite)
+# It should then push that generated template into the corresponding repositories
+
+# The repositories to be pushed to are
+# - https://github.com/vapor/template-fluent-postgres
+# - https://github.com/vapor/template-fluent-mysql
+# - https://github.com/vapor/template-fluent-postgres-leaf
+# - https://github.com/vapor/template-fluent-bare
+
