@@ -51,13 +51,13 @@ jobs:
 
         # Clone empty repository
         # Remove everything in repository except for the .git directory
+        # rm -rf . !(.git)
         # Run vapor new in the repository directory
         # Commit and push the generated template to github
       - name: Generate templates
         run: |
           git clone https://github.com/vapor/template-fluent-${{ matrix.repository }}.git
           cd template-fluent-${{ matrix.repository }}
-          ls -a
 
           swift run --enable-test-discovery \
             vapor new template-${{ matrix.repository }} \
