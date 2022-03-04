@@ -58,25 +58,18 @@ jobs:
           rm -rf .gitignore
           rm -rf .github
           rm -rf .dockerignore
-
-          echo =========== Before Gen =============
-          ls -a
-          echo ==============================
           swift run \
             vapor new template-${{ matrix.repository }} \
               --no-commit \
-              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
-          echo =========== After Gen =============
-          ls -a
-          echo ==============================
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }
 
           cd template-${{ matrix.repository }}
           echo =========== REPO =============
           ls -a
           echo ==============================
           rm -rf .git
-          cp -r * ../
-          cp -r .* ../
+          cp -rf * ../
+          cp -rf .* ../
           cd ..
 
           echo =========== PARENT =============
