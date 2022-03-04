@@ -50,39 +50,26 @@ jobs:
         run: swift build --enable-test-discovery -c debug
 
 
-      - name: Copy and Clear repository
+      - name: Generate template
         run: |
           git clone https://github.com/vapor/template-${{ matrix.repository }}.git
           cd template-${{ matrix.repository }}
-
           rm -rf *
           rm -rf .gitignore
           rm -rf .github
           rm -rf .dockerignore
 
-          echo ========================
-          ls -a
-          echo ========================
-        # Clone empty repository
-        # Remove everything in repository except for the .git directory
-        # rm -rf . !(.git)
-        # rm -rf *
-        # Run vapor new in the repository directory
-        # Commit and push the generated template to github
-      - name: Generate templates
-        run: |
-          echo =========== BGen =============
+          echo =========== Before Gen =============
           ls -a
           echo ==============================
           swift run \
             vapor new template-${{ matrix.repository }} \
               --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
-          echo =========== AGen =============
+          echo =========== After Gen =============
           ls -a
           echo ==============================
-      - name: Copy template to parent directory
-        run: |
+
           cd template-${{ matrix.repository }}
           echo =========== REPO =============
           ls -a
@@ -97,9 +84,6 @@ jobs:
           echo ================================
           rm -rf template-${{ matrix.repository }}
 
-          
-      - name: Commit and push to repository
-        run: |
           git config --global user.email "bot@vapor.codes"
           git config --global user.name "VaporBot"
           git add .
