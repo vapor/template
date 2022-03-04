@@ -51,12 +51,18 @@ jobs:
         # Clone empty repository
         # Remove everything in repository except for the .git directory
         # rm -rf . !(.git)
+        # rm -rf *
         # Run vapor new in the repository directory
         # Commit and push the generated template to github
       - name: Generate templates
         run: |
           git clone https://github.com/vapor/template-${{ matrix.repository }}.git
           cd template-${{ matrix.repository }}
+
+          rm -rf *
+          rm -rf .gitignore
+          rm -rf .github
+          rm -rf .dockerignore
 
           swift run \
             vapor new template-${{ matrix.repository }} \
@@ -65,8 +71,14 @@ jobs:
 
           cd template-${{ matrix.repository }}
           rm -rf .git
+          mv -v * ../
+          mv -v .* ../
           cd ..
 
+          rm -rf template-${{ matrix.repository }}
+
+          git config --global user.email "bot@vapor.codes"
+          git config --global user.name "VaporBot"
           git add .
           git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
           git push
