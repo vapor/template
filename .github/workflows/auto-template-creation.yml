@@ -61,7 +61,7 @@ jobs:
           swift run \
             vapor new template-${{ matrix.repository }} \
               --no-commit \
-              ${{ matrix.fluentflag }} ${{ matrix.leafflag }
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
 
           cd template-${{ matrix.repository }}
           echo =========== REPO =============
