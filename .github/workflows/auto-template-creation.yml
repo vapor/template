@@ -62,7 +62,6 @@ jobs:
             vapor new template-${{ matrix.repository }} \
               --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
-
           cd template-${{ matrix.repository }}
           rm -rf .git
           cd ..
@@ -70,13 +69,12 @@ jobs:
           cp -rf ./template-${{ matrix.repository }}/.[!.]* ./
           rm -rf template-${{ matrix.repository }}
 
-          git status
           git config --global user.email "bot@vapor.codes"
           git config --global user.name "VaporBot"
           git config --global credential.helper cache
           git add .
           git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
-          git push https://VaporBot:${{secrets.BOT_GITHUB_TOKEN}}@github.com/vapor/template-${{ matrix.repository }}
+          git push https://VaporBot:${{secrets.PROJECT_BOARD_AUTOMATION_PAT}}@github.com/vapor/template-${{ matrix.repository }}
       
               
   
