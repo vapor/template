@@ -64,17 +64,21 @@ jobs:
           rm -rf .github
           rm -rf .dockerignore
 
+          ls -a
+
           swift run \
             vapor new template-${{ matrix.repository }} \
               --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
 
           cd template-${{ matrix.repository }}
+          ls -a
           rm -rf .git
-          mv -v * ../
-          mv -v .* ../
+          cp -v -r * ../
+          cp -v -r .* ../
           cd ..
 
+          ls -a
           rm -rf template-${{ matrix.repository }}
 
           git config --global user.email "bot@vapor.codes"
