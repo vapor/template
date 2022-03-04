@@ -71,20 +71,25 @@ jobs:
         # Commit and push the generated template to github
       - name: Generate templates
         run: |
+          echo =========== BGen =============
+          ls -a
+          echo ==============================
           swift run \
             vapor new template-${{ matrix.repository }} \
               --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
-
+          echo =========== AGen =============
+          ls -a
+          echo ==============================
       - name: Copy template to parent directory
         run: |
           cd template-${{ matrix.repository }}
-          rm -rf .git
           echo =========== REPO =============
           ls -a
           echo ==============================
-          cp -v -r * ../
-          cp -v -r .* ../
+          rm -rf .git
+          cp -r * ../
+          cp -r .* ../
           cd ..
 
           echo =========== PARENT =============
