@@ -1,0 +1,80 @@
+# Run this action everytime a change has been made to the main branch
+# This action should build the vapor toolbox and then run vapor new for every database option (except sqlite)
+# It should then push that generated template into the corresponding repositories
+
+# The repositories to be pushed to are
+# - https://github.com/vapor/template-fluent-postgres.git
+# - https://github.com/vapor/template-fluent-mysql.git
+# - https://github.com/vapor/template-fluent-postgres-leaf.git
+# - https://github.com/vapor/template-fluent-bare.git
+
+name: Create templates
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-templates:
+    strategy:
+      fail-fast: false
+      matrix:
+        repository: 
+          - bare
+        fluentflag:
+          - --no-fluent
+        leafflag:
+          - --no-leaf
+        include:
+          # MySQL setup
+          - fluentflag: --fluent.db mysql
+            leafflag: --no-leaf
+            repository: fluent-mysql
+          # Postgres setup
+          - fluentflag: --fluent.db postgres
+            leafflag: --no-leaf
+            repository: fluent-postgres
+          # Postgres setup with leaf
+          - fluentflag: --fluent.db postgres
+            leafflag: --leaf
+            repository: fluent-postgres-leaf
+
+    runs-on: ubuntu-latest
+    container: "swift:5.5-focal"
+    steps:
+      - name: Check out toolbox
+        uses: actions/checkout@v3.0.0
+        with:
+          repository: vapor/toolbox
+      - name: Build toolbox
+        run: swift build --enable-test-discovery -c debug
+
+
+      - name: Generate template
+        run: |
+          git clone https://github.com/vapor/template-${{ matrix.repository }}.git
+          cd template-${{ matrix.repository }}
+          rm -rf *
+          rm -rf .gitignore
+          rm -rf .github
+          rm -rf .dockerignore
+          swift run \
+            vapor new template-${{ matrix.repository }} \
+              --no-commit \
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+          cd template-${{ matrix.repository }}
+          rm -rf .git
+          cd ..
+          cp -rf ./template-${{ matrix.repository }}/* ./
+          cp -rf ./template-${{ matrix.repository }}/.[!.]* ./
+          rm -rf template-${{ matrix.repository }}
+
+          git config --global user.email "bot@vapor.codes"
+          git config --global user.name "VaporBot"
+          git config --global credential.helper cache
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
+          git push https://VaporBot:${{secrets.PROJECT_BOARD_AUTOMATION_PAT}}@github.com/vapor/template-${{ matrix.repository }}
+      
+              
+  
