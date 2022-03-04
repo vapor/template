@@ -9,10 +9,10 @@
 # - https://github.com/vapor/template-fluent-bare.git
 
 name: Create templates
-on: { pull_request: {} }
-  #push:
-  #  branches:
-  #    - main
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   generate-templates:
