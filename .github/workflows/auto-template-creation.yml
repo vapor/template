@@ -69,9 +69,8 @@ jobs:
           echo ==============================
           rm -rf .git
           cd ..
-          find ./template-${{ matrix.repository }}/.
-          mv -r ./template-${{ matrix.repository }}/* ./
-          mv -r ./template-${{ matrix.repository }}/.* ./
+          mv ./template-${{ matrix.repository }}/* ./
+          mv ./template-${{ matrix.repository }}/.* ./
 
           echo =========== PARENT =============
           ls -a
