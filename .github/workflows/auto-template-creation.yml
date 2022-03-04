@@ -70,6 +70,7 @@ jobs:
           cp -rf ./template-${{ matrix.repository }}/.[!.]* ./
           rm -rf template-${{ matrix.repository }}
 
+          git status
           git config --global user.email "bot@vapor.codes"
           git config --global user.name "VaporBot"
           git add .
