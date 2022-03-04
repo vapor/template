@@ -64,24 +64,17 @@ jobs:
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
 
           cd template-${{ matrix.repository }}
-          echo =========== REPO =============
-          ls -a
-          echo ==============================
           rm -rf .git
           cd ..
           cp -rf ./template-${{ matrix.repository }}/* ./
           cp -rf ./template-${{ matrix.repository }}/.[!.]* ./
-
-          echo =========== PARENT =============
-          ls -a
-          echo ================================
           rm -rf template-${{ matrix.repository }}
 
           git config --global user.email "bot@vapor.codes"
           git config --global user.name "VaporBot"
           git add .
           git diff-index --quiet HEAD || git commit -m "Automatic generation from github.com/vapor/template"
-          git push
+          git push https://user:${{secrets.BOT_GITHUB_TOKEN}}@github.com/vapor/template-${{ matrix.repository }}.git
       
               
   
