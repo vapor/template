@@ -62,12 +62,14 @@ jobs:
               --no-commit -o /tmp/template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           cd /tmp/template-test
-          echo '=========='
+          echo '========='
           ls -a
-          echo '=========='
+          echo '========='
 
       - name: Test the template
-        run: swift test
+        run: | 
+          cd /tmp/template-test
+          swift test
 
       - name: Build Docker-compose with database
         if: |
