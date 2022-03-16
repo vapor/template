@@ -66,11 +66,12 @@ jobs:
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           swift test
           zip -r template-test
-          ls -l | grep .zip
+          ls -a
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3 
         with:
           name: template-${{ matrix.fluentflags }}-${{ matrix.leafflags }}
+          path: template-test.zip
           retention-days: 1
           
       - name: Build Docker-compose with database
