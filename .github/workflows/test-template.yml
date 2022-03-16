@@ -65,7 +65,7 @@ jobs:
               --no-commit -o /template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           swift test
-          zip -r template-test
+          zip -r template-test.zip /template-test
           echo '============'
           ls -a
       - name: Archive production artifacts
