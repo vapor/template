@@ -42,6 +42,7 @@ jobs:
         run: | 
           cd toolbox
           swift build --enable-test-discovery -c debug
+          cd ..
 
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
