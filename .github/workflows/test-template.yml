@@ -47,15 +47,18 @@ jobs:
           echo "##[set-output name=branch;]$(echo ${github.ref#refs/heads/})"
           echo "##[set-output name=fork;]$(echo ${github.server_url/github.repository})"
         id: extract_source
-        # get template from the pr with checkout
-        # get from github url for forks
-        # get from branch
-      - name: Build the template
+
+      - name: Display source
         run: |
           echo "====================="
           echo ${{ steps.etract_source.outputs.branch }}
           echo ${{ steps.etract_source.outputs.fork }}
           echo "====================="
+        # get template from the pr with checkout
+        # get from github url for forks
+        # get from branch
+      - name: Build the template
+        run: |
           swift run --enable-test-discovery \
             vapor new template-test \
               --no-commit -o /tmp/template-test \
