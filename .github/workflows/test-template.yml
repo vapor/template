@@ -44,7 +44,7 @@ jobs:
           swift run --enable-test-discovery \
             vapor new template-test \
               --no-commit -o /tmp/template-test \
-              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+              ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Test the template
         run: swift test --enable-test-discovery
       - name: Docker compose build
