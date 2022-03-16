@@ -64,6 +64,32 @@ jobs:
 
       - name: Test the template
         run: swift test --enable-test-discovery
+      - name: Build Docker-compose with database
+        if: |
+          ${{ contains(matrix.fluentflags, 'sqlite') }} ||
+          ${{ contains(matrix.fluentflags, 'mysql') }} ||
+          ${{ contains(matrix.fluentflags, 'postgres') }} ||
+          ${{ contains(matrix.fluentflags, 'mongo') }}
+        run: |
+          cd /tmp/template-test
+          docker-compose build
+          docker-compose up app
+          docker-compose up db 
+          docker-compose run migrate
+          docker-compose down -v
+      - name: Build Docker-compose without database
+        if: |
+          ${{ !contains(matrix.fluentflags, 'sqlite') }} ||
+          ${{ !contains(matrix.fluentflags, 'mysql') }} ||
+          ${{ !contains(matrix.fluentflags, 'postgres') }} ||
+          ${{ !contains(matrix.fluentflags, 'mongo') }}
+        run: |
+          cd /tmp/template-test
+          docker-compose build
+          docker-compose up app
+          docker-compose up db 
+          docker-compose run migrate
+          docker-compose down -v
       
 
 
