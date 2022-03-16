@@ -41,9 +41,6 @@ jobs:
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-
-      - name: Install zip and unzip
-        run: apt-get -q install -y zip unzip
       
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
