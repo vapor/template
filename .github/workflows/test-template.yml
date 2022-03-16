@@ -64,6 +64,7 @@ jobs:
 
       - name: Test the template
         run: swift test --enable-test-discovery
+
       - name: Build Docker-compose with database
         if: |
           ${{ contains(matrix.fluentflags, 'sqlite') }} ||
@@ -71,7 +72,7 @@ jobs:
           ${{ contains(matrix.fluentflags, 'postgres') }} ||
           ${{ contains(matrix.fluentflags, 'mongo') }}
         run: |
-          cd /tmp/template-test
+          cd tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
@@ -84,7 +85,7 @@ jobs:
           ${{ !contains(matrix.fluentflags, 'postgres') }} ||
           ${{ !contains(matrix.fluentflags, 'mongo') }}
         run: |
-          cd /tmp/template-test
+          cd tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
