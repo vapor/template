@@ -1,9 +1,6 @@
 name: test 
 
-on:
-  push:
-    branches:
-      - '!main'
+on: [pull_request]
 
 # Build the toolbox
 # Run vapor new for all options
