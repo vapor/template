@@ -61,6 +61,8 @@ jobs:
               --branch ${{ steps.extract_source.outputs.branch }} \
               --no-commit -o /tmp/template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+          cd /tmp/template-test
+          ls -a
 
       - name: Test the template
         run: swift test --enable-test-discovery
@@ -73,7 +75,6 @@ jobs:
           ${{ contains(matrix.fluentflags, 'mongo') }}
         run: |
           ls -a
-          cd /tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
@@ -87,7 +88,6 @@ jobs:
           ${{ !contains(matrix.fluentflags, 'mongo') }}
         run: |
           ls -a
-          cd /tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
