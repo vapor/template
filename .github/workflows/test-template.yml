@@ -38,18 +38,18 @@ jobs:
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-        
+
       - name: Build the template
         run: |
-          swift run \
+          swift run --enable-test-discovery \
             vapor new template-test \
-              --no-commit \
+              --no-commit -o /tmp/template-test \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
       - name: Test the template
         run: swift test --enable-test-discovery
       - name: Docker compose build
         run: |
-          cd template-test 
+          cd /tmp/template-test 
           docker-compose build
           docker-compose up app 
       - name: Docker compose up
