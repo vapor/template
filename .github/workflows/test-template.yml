@@ -51,8 +51,8 @@ jobs:
       - name: Display source
         run: |
           echo "====================="
-          echo ${{ steps.etract_source.outputs.branch }}
-          echo ${{ steps.etract_source.outputs.fork }}
+          echo ${{ steps.extract_source.outputs.branch }}
+          echo ${{ steps.extract_source.outputs.fork }}
           echo "====================="
         # get template from the pr with checkout
         # get from github url for forks
