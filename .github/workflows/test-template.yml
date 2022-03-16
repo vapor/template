@@ -48,14 +48,14 @@ jobs:
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
       
       - name: Build the template from fork
-        if: ${{ !contains(steps.extract_source.outputs.fork, https://github.com/vapor/template) }}
+        if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
           swift run --enable-test-discovery \
             vapor new template-test --template steps.extract_source.outputs.fork \
               --no-commit -o /tmp/template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build the template from branch
-        if: ${{ contains(steps.extract_source.outputs.fork, https://github.com/vapor/template) }}
+        if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
           swift run --enable-test-discovery \
             vapor new template-test --branch steps.extract_source.outputs.branch \
