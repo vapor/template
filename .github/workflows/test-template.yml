@@ -28,17 +28,23 @@ jobs:
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.image }}
     steps:
-      - name: Install SQLite if needed
-        if: ${{ contains(matrix.fluentflags, 'sqlite') }}
-        run: apt-get -q update && apt-get -q install -y libsqlite3-dev
       - name: Checkout the toolbox
         uses: actions/checkout@v3.0.0
         with:
           repository: vapor/toolbox
       - name: Build toolbox
         run: swift build --enable-test-discovery -c debug
+
+      - name: Install SQLite if needed
+        if: ${{ contains(matrix.fluentflags, 'sqlite') }}
+        run: apt-get -q update && apt-get -q install -y libsqlite3-dev
+        
       - name: Build the template
-        run: swift run vapor new template-test --no-commit ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+        run: |
+          swift run \
+            vapor new template-test \
+              --no-commit \
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
       - name: Test the template
         run: swift test --enable-test-discovery
       - name: Docker compose build
