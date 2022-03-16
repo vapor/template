@@ -1,0 +1,65 @@
+name: test 
+
+on:
+  pull_request:
+    branches:
+      - main
+
+# Build the toolbox
+# Run vapor new for all options
+# Build the docker container
+
+jobs:
+  test-new:
+    strategy:
+      fail-fast: false
+      matrix:
+      fluentflags:
+        - --no-fluent
+        - --fluent.db mysql
+        - --fluent.db postgres
+        - --fluent.db sqlite
+        - --fluent.db mongo
+      leafflags:
+        - --leaf
+        - --no-leaf
+      os: [ubuntu-latest]
+      image: ["swift:5.5-focal"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install SQLite if needed
+        if: ${{ contains(matrix.fluentflags, 'sqlite') }}
+        run: apt-get -q update && apt-get -q install -y libsqlite3-dev
+      - name: Checkout the toolbox
+        uses: actions/checkout@v3.0.0
+        with:
+          repository: vapor/toolbox
+      - name: Build toolbox
+        run: swift build --enable-test-discovery -c debug
+      - name: Build the template
+        run: |
+          swift run --enable-test-discovery \
+            vapor new template-test \
+              --no-commit -o /tmp/template-test \
+              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+      - name: Test the template
+        run: swift test --package-path /tmp/toolbox-test --enable-test-discovery
+      - name: Docker compose build
+        run: |
+          cd /tmp/template-test 
+          docker-compose build
+          docker-compose up app 
+      - name: Docker compose up
+        if: | 
+          ${{ contains(matrix.fluentflags, 'sqlite') }} ||
+          ${{ contains(matrix.fluentflags, 'postgres') }} ||
+          ${{ contains(matrix.fluentflags, 'mysql') }} ||
+          ${{ contains(matrix.fluentflags, 'mongo') }}
+        run: |
+          docker-compose up db 
+          docker-compose run migrate
+      - name: Docker compose down
+        run: docker-compose down -v
+
+
+
