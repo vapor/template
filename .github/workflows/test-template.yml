@@ -44,7 +44,7 @@ jobs:
 
       - name: Extract source of pull request 
         run:  |
-          echo "##[set-output name=branch;]$(echo ${{ github.ref_name }})"
+          echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
           echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.repository }})"
         id: extract_source
 
@@ -54,9 +54,7 @@ jobs:
           echo ${{ steps.extract_source.outputs.branch }}
           echo ${{ steps.extract_source.outputs.fork }}
           echo "====================="
-        # get template from the pr with checkout
-        # get from github url for forks
-        # get from branch
+        
       - name: Build the template
         run: |
           swift run --enable-test-discovery \
