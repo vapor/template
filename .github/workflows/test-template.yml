@@ -32,15 +32,30 @@ jobs:
         uses: actions/checkout@v3.0.0
         with:
           repository: vapor/toolbox
+          path: toolbox
       - name: Build toolbox
-        run: swift build --enable-test-discovery -c debug
+        run: | 
+          cd toolbox
+          swift build --enable-test-discovery -c debug
 
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
 
+      - name: Extract source of pull request 
+        run:  |
+          echo "##[set-output name=branch;]$(echo ${github.ref#refs/heads/})"
+          echo "##[set-output name=fork;]$(echo ${github.server_url/github.repository})"
+        id: extract_source
+        # get template from the pr with checkout
+        # get from github url for forks
+        # get from branch
       - name: Build the template
         run: |
+          echo "====================="
+          echo ${{ steps.etract_source.outputs.branch }}
+          echo ${{ steps.etract_source.outputs.fork }}
+          echo "====================="
           swift run --enable-test-discovery \
             vapor new template-test \
               --no-commit -o /tmp/template-test \
