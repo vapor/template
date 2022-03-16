@@ -28,6 +28,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.image }}
     steps:
+      - name: Extract source of pull request 
+        run:  |
+          echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
+          echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.repository }})"
+        id: extract_source
       - name: Checkout the toolbox
         uses: actions/checkout@v3.0.0
         with:
@@ -41,44 +46,25 @@ jobs:
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-
-      - name: Extract source of pull request 
-        run:  |
-          echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
-          echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.repository }})"
-        id: extract_source
-
-      - name: Display source
-        run: |
-          echo "====================="
-          echo ${{ steps.extract_source.outputs.branch }}
-          echo ${{ steps.extract_source.outputs.fork }}
-          echo "====================="
-        
-      - name: Build the template
+      
+      - name: Build the template from fork
+        if: ${{ !contains(steps.extract_source.outputs.fork, "https://github.com/vapor/template") }}
         run: |
           swift run --enable-test-discovery \
-            vapor new template-test \
+            vapor new template-test --template steps.extract_source.outputs.fork \
               --no-commit -o /tmp/template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+      - name: Build the template from branch
+        if: ${{ contains(steps.extract_source.outputs.fork, "https://github.com/vapor/template") }}
+        run: |
+          swift run --enable-test-discovery \
+            vapor new template-test --branch steps.extract_source.outputs.branch \
+              --no-commit -o /tmp/template-test \
+              ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+
       - name: Test the template
         run: swift test --enable-test-discovery
-      - name: Docker compose build
-        run: |
-          cd /tmp/template-test 
-          docker-compose -f docker-compose.yml build
-          docker-compose up app 
-      - name: Docker compose up
-        if: | 
-          ${{ contains(matrix.fluentflags, 'sqlite') }} ||
-          ${{ contains(matrix.fluentflags, 'postgres') }} ||
-          ${{ contains(matrix.fluentflags, 'mysql') }} ||
-          ${{ contains(matrix.fluentflags, 'mongo') }}
-        run: |
-          docker-compose up db 
-          docker-compose run migrate
-      - name: Docker compose down
-        run: docker-compose down -v
+      
 
 
 
