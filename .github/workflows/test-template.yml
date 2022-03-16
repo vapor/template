@@ -39,15 +39,15 @@ jobs:
         run: swift build --enable-test-discovery -c debug
       - name: Build the template
         run: |
-          swift run --enable-test-discovery \
+          swift run \
             vapor new template-test \
-              --no-commit -o /tmp/template-test \
+              --no-commit \
               ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
       - name: Test the template
-        run: swift test --package-path /tmp/toolbox-test --enable-test-discovery
+        run: swift test --enable-test-discovery
       - name: Docker compose build
         run: |
-          cd /tmp/template-test 
+          cd template-test 
           docker-compose build
           docker-compose up app 
       - name: Docker compose up
