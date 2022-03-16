@@ -72,7 +72,8 @@ jobs:
           ${{ contains(matrix.fluentflags, 'postgres') }} ||
           ${{ contains(matrix.fluentflags, 'mongo') }}
         run: |
-          cd tmp/template-test
+          ls -a
+          cd /tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
@@ -85,7 +86,8 @@ jobs:
           ${{ !contains(matrix.fluentflags, 'postgres') }} ||
           ${{ !contains(matrix.fluentflags, 'mongo') }}
         run: |
-          cd tmp/template-test
+          ls -a
+          cd /tmp/template-test
           docker-compose build
           docker-compose up app
           docker-compose up db 
