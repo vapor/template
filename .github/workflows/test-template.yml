@@ -38,11 +38,7 @@ jobs:
       - name: Build toolbox
         run: swift build --enable-test-discovery -c debug
       - name: Build the template
-        run: |
-          swift run \
-            vapor new template-test \
-              --no-commit \
-              ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
+        run: swift run vapor new template-test --no-commit ${{ matrix.fluentflag }} ${{ matrix.leafflag }}
       - name: Test the template
         run: swift test --enable-test-discovery
       - name: Docker compose build
