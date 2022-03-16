@@ -45,32 +45,34 @@ jobs:
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
       
-      - name: Build the template from fork
+      - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
           swift run \
             vapor new template-test \
               --template ${{ steps.extract_source.outputs.fork }} \
-              --no-commit -o /tmp/template-test \
+              --no-commit -o /template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
-      - name: Build the template from branch
+          cd /template-test
+          swift test
+
+      - name: Build the template from branch and test it
         if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
           swift run \
             vapor new template-test \
               --branch ${{ steps.extract_source.outputs.branch }} \
-              --no-commit -o /tmp/template-test \
+              --no-commit -o /template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
-          cd /tmp/template-test
-          echo '========='
-          ls -a
-          echo '========='
-
-      - name: Test the template
-        run: | 
-          cd /tmp/template-test
           swift test
-
+          zip -r template-test
+          ls -l | grep .zip
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3 
+        with:
+          name: template-${{ matrix.fluentflags }}-${{ matrix.leafflags }}
+          retention-days: 1
+          
       - name: Build Docker-compose with database
         if: |
           ${{ contains(matrix.fluentflags, 'sqlite') }} ||
