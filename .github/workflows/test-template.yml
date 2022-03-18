@@ -52,9 +52,9 @@ jobs:
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           cd /template-test
           swift test
-          cd ..
-          zip -r template-test.zip /template-test
-          ls -a
+          docker-compose build
+          docker-compose up app
+          docker-compose down -v
 
       - name: Build the template from branch and test it
         if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
@@ -66,45 +66,6 @@ jobs:
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           cd /template-test
           swift test
-          cd ..
-          zip -r template-test.zip /template-test
-          ls -a
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3 
-        with:
-          name: template-${{ matrix.fluentflags }}-${{ matrix.leafflags }}
-          path: template-test.zip
-          retention-days: 1
-
-  build-docker:
-    needs: test-new
-    strategy:
-      fail-fast: false
-      matrix:
-        fluentflags:
-          - --no-fluent
-          - --fluent.db mysql
-          - --fluent.db postgres
-          - --fluent.db sqlite
-          - --fluent.db mongo
-        leafflags:
-          - --leaf
-          - --no-leaf
-        os: [ubuntu-latest]
-        image: ["swift:5.5-focal"]
-    runs-on: ${{ matrix.os }}
-    container: ${{ matrix.image }}
-    steps:
-      - name: Download a single artifact 
-        uses: actions/download-artifact@v3 
-        with:
-          name: template-${{ matrix.fluentflags }}-${{ matrix.leafflags }}
-      - name: Unzip artifact
-        run: |
-          unzip template-test.zip
-      - name: Build Docker-compose with database
-        run: |
           docker-compose build
           docker-compose up app
           docker-compose down -v
