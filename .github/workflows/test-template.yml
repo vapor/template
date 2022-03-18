@@ -41,11 +41,12 @@ jobs:
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-      
-      - name: Setup docker-compose
-        uses: KengoTODA/actions-setup-docker-compose@v1.0.3
-        with:
-          version: '1.29.2'
+
+      - name: Install docker-compose
+        run: |
+          curl -L https://github.com/docker/compose/releases/download/2.3.3/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
 
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
