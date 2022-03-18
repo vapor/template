@@ -21,10 +21,14 @@ jobs:
           - --leaf
           - --no-leaf
         os: [ubuntu-latest]
-        image: ["swift:5.5-focal"]
+        swift: ["5.5"]
     runs-on: ${{ matrix.os }}
-    container: ${{ matrix.image }}
     steps:
+      - name: Setup Swift
+        uses: fwal/setup-swift@v1.14.0
+        with:
+          swift-version: ${{ matrix.swift }}
+          
       - name: Extract source of pull request 
         run:  |
           echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
@@ -41,12 +45,6 @@ jobs:
       - name: Install SQLite if needed
         if: ${{ contains(matrix.fluentflags, 'sqlite') }}
         run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-
-      - name: Install docker-compose
-        run: |
-          curl -L https://github.com/docker/compose/releases/download/2.3.3/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-          chmod +x /usr/local/bin/docker-compose
-          docker-compose --version
 
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
