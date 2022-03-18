@@ -66,8 +66,8 @@ jobs:
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           cd /template-test
           swift test
-          docker-compose -f docker-compose.yml build
-          docker-compose -f docker-compose.yml up app
+          docker-compose -f docker-compose.yml build -d
+          docker-compose -f docker-compose.yml up app -d
           docker-compose down -v
 
       
