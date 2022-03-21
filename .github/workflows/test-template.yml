@@ -21,14 +21,9 @@ jobs:
           - --leaf
           - --no-leaf
         os: [ubuntu-20.04]
-        swift: ["5.5"]
     runs-on: ${{ matrix.os }}
 
     steps:
-      #- name: Setup Swift
-      #  uses: fwal/setup-swift@v1.14.0
-      #  with:
-      #    swift-version: ${{ matrix.swift }}
           
       - name: Extract source of pull request 
         run:  |
@@ -39,16 +34,6 @@ jobs:
         uses: actions/checkout@v3.0.0
         with:
           repository: vapor/toolbox
-      #- name: Build toolbox
-      #  run: | 
-      #    sudo swift build --enable-test-discovery -c debug
-
-      #- name: Install SQLite if needed
-      #  if: ${{ contains(matrix.fluentflags, 'sqlite') }}
-      #  run: apt-get -q update && apt-get -q install -y libsqlite3-dev
-
-      - name: whoami
-        run: whoami
 
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
@@ -62,8 +47,6 @@ jobs:
           cd /template-test
           swift test
           docker-compose build
-          docker-compose up app
-          docker-compose down -v
 
       - name: Build the template from branch and test it
         if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
@@ -77,8 +60,6 @@ jobs:
           cd /template-test
           swift test
           docker-compose build
-          docker-compose up app
-          docker-compose down -v
 
       
 
