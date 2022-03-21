@@ -49,6 +49,7 @@ jobs:
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
+          mkdir /template-test
           swift run \
             vapor new template-test \
               --template ${{ steps.extract_source.outputs.fork }} \
