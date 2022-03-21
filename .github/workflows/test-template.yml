@@ -27,10 +27,10 @@ jobs:
           
       - name: Extract source of pull request 
         run:  |
-          echo ${{ github.event.pull_request.head.repo.full_name }}
           echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
-          echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.repository }})"
+          echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }})"
         id: extract_source
+
       - name: Checkout the toolbox
         uses: actions/checkout@v3.0.0
         with:
