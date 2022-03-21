@@ -49,7 +49,7 @@ jobs:
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
-          swift run \
+          sudo swift run \
             vapor new template-test \
               --template ${{ steps.extract_source.outputs.fork }} \
               --no-commit \
