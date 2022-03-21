@@ -54,6 +54,7 @@ jobs:
               --template ${{ steps.extract_source.outputs.fork }} \
               --no-commit \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+          sudo !!
           cd /template-test
           swift test
           docker-compose build
