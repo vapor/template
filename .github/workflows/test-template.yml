@@ -30,6 +30,7 @@ jobs:
           echo ${{ github.head_ref }}
           echo ${{ github.ref }}
           echo ${{ github.ref_name }}
+          echo ${{ github.event.pull_request.head.repo.full_name }}
           echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
           echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.repository }})"
         id: extract_source
