@@ -60,8 +60,3 @@ jobs:
           cd /template-test
           swift test
           docker-compose build
-
-      
-
-
-
