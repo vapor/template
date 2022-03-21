@@ -43,9 +43,9 @@ jobs:
       #  run: | 
       #    sudo swift build --enable-test-discovery -c debug
 
-      - name: Install SQLite if needed
-        if: ${{ contains(matrix.fluentflags, 'sqlite') }}
-        run: apt-get -q update && apt-get -q install -y libsqlite3-dev
+      #- name: Install SQLite if needed
+      #  if: ${{ contains(matrix.fluentflags, 'sqlite') }}
+      #  run: apt-get -q update && apt-get -q install -y libsqlite3-dev
 
       - name: whoami
         run: whoami
@@ -68,11 +68,12 @@ jobs:
       - name: Build the template from branch and test it
         if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
-          sudo swift run \
+          swift run \
             vapor new template-test \
               --branch ${{ steps.extract_source.outputs.branch }} \
               --no-commit -o /template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+          chown -R runner /template-test
           cd /template-test
           swift test
           docker-compose build
