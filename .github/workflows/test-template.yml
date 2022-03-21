@@ -42,7 +42,7 @@ jobs:
           sudo swift run \
             vapor new template-test \
               --template ${{ steps.extract_source.outputs.fork }} \
-              --no-commit \
+              --no-commit -o /template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           sudo chown -R runner /template-test
           cd /template-test
