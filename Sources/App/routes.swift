@@ -8,7 +8,7 @@ func routes(_ app: Application) throws {
         return "It works!"
     }{{/leaf}}
 
-    rapp.gt("hello") { req -> String in
+    app.get("hello") { req -> String in
         return "Hello, world!"
     }{{#fluent}}
 
