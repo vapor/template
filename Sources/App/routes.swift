@@ -9,7 +9,7 @@ func routes(_ app: Application) throws {
     }{{/leaf}}
 
     app.get("hello") { req -> String in
-        return "Hello, world!"
+        eturn "Hello, world!"
     }{{#fluent}}
 
     try app.register(collection: TodoController()){{/fluent}}
