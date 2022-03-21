@@ -27,6 +27,7 @@ jobs:
           
       - name: Extract source of pull request 
         run:  |
+          echo "##[set-output name=source;]$(echo ${{ github.event.pull_request.head.repo.full_name }})"
           echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
           echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }})"
         id: extract_source
@@ -37,7 +38,7 @@ jobs:
           repository: vapor/toolbox
 
       - name: Build the template from fork and  test it
-        if: ${{ steps.extract_source.outputs.fork != 'vapor/template' }}
+        if: ${{ steps.extract_source.outputs.source != 'vapor/template' }}
         run: |
           sudo swift run \
             vapor new template-test \
@@ -53,7 +54,7 @@ jobs:
           docker-compose build
 
       - name: Build the template from branch and test it
-        if: ${{ steps.extract_source.outputs.fork == 'vapor/template' }}
+        if: ${{ steps.extract_source.outputs.source == 'vapor/template' }}
         run: |
           sudo swift run \
             vapor new template-test \
