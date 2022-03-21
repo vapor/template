@@ -46,6 +46,9 @@ jobs:
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
           sudo chown -R runner /template-test
           cd /template-test
+
+          ls -a 
+          cat ./Sources/App/routes.swift
           swift test
           docker-compose build
 

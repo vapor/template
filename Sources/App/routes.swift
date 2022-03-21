@@ -8,8 +8,8 @@ func routes(_ app: Application) throws {
         return "It works!"
     }{{/leaf}}
 
-    app.get("hello") { req -> String in
-        eturn "Hello, world!"
+    rapp.gt("hello") { req -> String in
+        return "Hello, world!"
     }{{#fluent}}
 
     try app.register(collection: TodoController()){{/fluent}}
