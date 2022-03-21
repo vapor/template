@@ -23,6 +23,7 @@ jobs:
         os: [ubuntu-latest]
         swift: ["5.5"]
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Setup Swift
         uses: fwal/setup-swift@v1.14.0
@@ -49,12 +50,11 @@ jobs:
       - name: Build the template from fork and  test it
         if: ${{ !contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
-          swift run \
+          sudo swift run \
             vapor new template-test \
               --template ${{ steps.extract_source.outputs.fork }} \
               --no-commit \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
-          sudo !!
           cd /template-test
           swift test
           docker-compose build
@@ -64,7 +64,7 @@ jobs:
       - name: Build the template from branch and test it
         if: ${{ contains(steps.extract_source.outputs.fork, 'vapor/template') }}
         run: |
-          swift run \
+          sudo swift run \
             vapor new template-test \
               --branch ${{ steps.extract_source.outputs.branch }} \
               --no-commit -o /template-test \
