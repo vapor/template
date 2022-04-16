@@ -18,6 +18,6 @@
         <img src="http://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.5-brightgreen.svg" alt="Swift 5.5">
+        <img src="http://img.shields.io/badge/swift-5.5-brightgreen.svg" alt="Swift 5.6">
     </a>
 </p>
