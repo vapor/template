@@ -19,4 +19,4 @@ let appThread = Thread {
 appThread.name = "Vapor App"
 appThread.start()
 
-RunLoop.main.run()
+dispatchMain()
