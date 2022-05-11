@@ -30,10 +30,11 @@ jobs:
           echo "##[set-output name=source;]$(echo ${{ github.event.pull_request.head.repo.full_name }})"
           echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
           echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }})"
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
         id: extract_source
 
       - name: Checkout the toolbox
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.1
         with:
           repository: vapor/toolbox
 
