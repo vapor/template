@@ -47,7 +47,7 @@ FROM ubuntu:focal
 
 # Make sure all system packages are up to date.
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true && \
-    apt-get -q update && apt-get -q dist-upgrade -y && apt-get -q install -y ca-certificates tzdata && \
+    apt-get -q update && apt-get -q dist-upgrade -y && apt-get -q install -y ca-certificates tzdata{{#fluent.db.is_sqlite}} sqlite3{{/fluent.db.is_sqlite}} && \
     rm -r /var/lib/apt/lists/*
 
 # Create a vapor user and group with /app as its home directory
