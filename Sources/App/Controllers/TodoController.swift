@@ -26,6 +26,6 @@ struct TodoController: RouteCollection {
             throw Abort(.notFound)
         }
         try await todo.delete(on: req.db)
-        return .ok
+        return .noContent
     }
 }
