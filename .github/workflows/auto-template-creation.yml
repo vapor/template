@@ -6,7 +6,7 @@
 # - https://github.com/vapor/template-fluent-postgres.git
 # - https://github.com/vapor/template-fluent-mysql.git
 # - https://github.com/vapor/template-fluent-postgres-leaf.git
-# - https://github.com/vapor/template-fluent-bare.git
+# - https://github.com/vapor/template-bare.git
 
 name: Create templates
 on:
