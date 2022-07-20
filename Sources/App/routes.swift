@@ -3,13 +3,13 @@
 
 func routes(_ app: Application) throws {
     {{#leaf}}app.get { req async throws in
-        return try await req.view.render("index", ["title": "Hello Vapor!"])
+        try await req.view.render("index", ["title": "Hello Vapor!"])
     }{{/leaf}}{{^leaf}}app.get { req async in
-        return "It works!"
+        "It works!"
     }{{/leaf}}
 
     app.get("hello") { req async -> String in
-        return "Hello, world!"
+        "Hello, world!"
     }{{#fluent}}
 
     try app.register(collection: TodoController()){{/fluent}}
