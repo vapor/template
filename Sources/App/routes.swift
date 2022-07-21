@@ -2,14 +2,14 @@
 {{/fluent}}import Vapor
 
 func routes(_ app: Application) throws {
-    {{#leaf}}app.get { req in
-        return req.view.render("index", ["title": "Hello Vapor!"])
-    }{{/leaf}}{{^leaf}}app.get { req in
-        return "It works!"
+    {{#leaf}}app.get { req async throws in
+        try await req.view.render("index", ["title": "Hello Vapor!"])
+    }{{/leaf}}{{^leaf}}app.get { req async in
+        "It works!"
     }{{/leaf}}
 
-    app.get("hello") { req -> String in
-        return "Hello, world!"
+    app.get("hello") { req async -> String in
+        "Hello, world!"
     }{{#fluent}}
 
     try app.register(collection: TodoController()){{/fluent}}
