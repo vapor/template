@@ -1,13 +1,12 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.6-focal as build
+FROM swift:5.7-jammy as build
 
 # Install OS updates and, if needed, sqlite3
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update \
-    && apt-get -q dist-upgrade -y {{#fluent.db.is_sqlite}}\
-    && apt-get install -y libsqlite3-dev {{/fluent.db.is_sqlite}}\
+    && apt-get -q dist-upgrade -y\
     && rm -rf /var/lib/apt/lists/*
 
 # Set up a build area
@@ -51,8 +50,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q dist-upgrade -y \
     && apt-get -q install -y \
       ca-certificates \
-      tzdata{{#fluent.db.is_sqlite}} \
-      sqlite3{{/fluent.db.is_sqlite}} \
+      tzdata \
 # If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
       # libcurl4 \
 # If your app or its dependencies import FoundationXML, also install `libxml2`.
