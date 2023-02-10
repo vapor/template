@@ -50,7 +50,7 @@ files:
     files:
       - folder: Run
         files:
-          - main.swift
+          - Run.swift
       - folder: App
         files:
           - file: configure.swift
