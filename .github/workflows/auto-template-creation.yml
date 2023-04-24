@@ -9,6 +9,9 @@
 # - https://github.com/vapor/template-bare.git
 
 name: Create templates
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 on:
   push:
     branches:
@@ -38,21 +41,18 @@ jobs:
           - fluentflag: --fluent.db postgres
             leafflag: --leaf
             repository: fluent-postgres-leaf
-
     runs-on: ubuntu-latest
-    container: "swift:5.5-focal"
+    container: "swift:5.8-jammy"
     steps:
       - name: Configure git
         run: |
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Check out toolbox
-        uses: actions/checkout@v3.0.1
+        uses: actions/checkout@v3
         with:
           repository: vapor/toolbox
       - name: Build toolbox
-        run: swift build --enable-test-discovery -c debug
-
-
+        run: swift build
       - name: Generate template
         run: |
           git clone https://github.com/vapor/template-${{ matrix.repository }}.git

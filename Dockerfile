@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.7-jammy as build
+FROM swift:5.8-jammy as build
 
 # Install OS updates and, if needed, sqlite3
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -29,7 +29,7 @@ RUN swift build -c release --static-swift-stdlib
 WORKDIR /staging
 
 # Copy main executable to staging area
-RUN cp "$(swift build --package-path /build -c release --show-bin-path)/Run" ./
+RUN cp "$(swift build --package-path /build -c release --show-bin-path)/App" ./
 
 # Copy resources bundled by SPM to staging area
 RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./ \;
@@ -73,5 +73,5 @@ USER vapor:vapor
 EXPOSE 8080
 
 # Start the Vapor service when the image is run, default to listening on 8080 in production environment
-ENTRYPOINT ["./Run"]
+ENTRYPOINT ["./App"]
 CMD ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]

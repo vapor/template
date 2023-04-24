@@ -1,65 +1,42 @@
-name: test 
-
-on: [pull_request]
-
-# Build the toolbox
-# Run vapor new for all options
-# Build the docker container
+name: test
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+on:
+  pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
 
 jobs:
+  # Build the toolbox, then run vapor new and build the docker container for all options
   test-new:
+    if: ${{ !github.event.pull_request.draft }}
     strategy:
       fail-fast: false
       matrix:
         fluentflags:
-          - --no-fluent
-          - --fluent.db mysql
-          - --fluent.db postgres
-          - --fluent.db sqlite
-          - --fluent.db mongo
+          - '--no-fluent'
+          - '--fluent.db mysql'
+          - '--fluent.db postgres'
+          - '--fluent.db sqlite'
+          - '--fluent.db mongo'
         leafflags:
-          - --leaf
-          - --no-leaf
-        os: [ubuntu-20.04]
-    runs-on: ${{ matrix.os }}
-
+          - '--leaf'
+          - '--no-leaf'
+    runs-on: ubuntu-latest
     steps:
-          
-      - name: Extract source of pull request 
-        run:  |
-          echo "##[set-output name=source;]$(echo ${{ github.event.pull_request.head.repo.full_name }})"
-          echo "##[set-output name=branch;]$(echo ${{ github.head_ref }})"
-          echo "##[set-output name=fork;]$(echo ${{ github.server_url }}/${{ github.event.pull_request.head.repo.full_name }})"
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        id: extract_source
-
       - name: Checkout the toolbox
-        uses: actions/checkout@v3.0.1
+        uses: actions/checkout@v3
         with:
           repository: vapor/toolbox
-
-      - name: Build the template from fork and  test it
-        if: ${{ steps.extract_source.outputs.source != 'vapor/template' }}
+          path: toolbox
+      - name: Generate a project from the template
         run: |
-          sudo swift run \
+          swift run --package-path toolbox \
             vapor new template-test \
-              --template ${{ steps.extract_source.outputs.fork }} \
-              --no-commit -o /template-test \
+              --template ${{ github.event.pull_request.head.repo.clone_url }} \
+              --branch ${{ github.head_ref }} \
+              --no-commit -o template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
-          sudo chown -R runner /template-test
-          cd /template-test
-          swift test
-          docker-compose build
-
-      - name: Build the template from branch and test it
-        if: ${{ steps.extract_source.outputs.source == 'vapor/template' }}
-        run: |
-          sudo swift run \
-            vapor new template-test \
-              --branch ${{ steps.extract_source.outputs.branch }} \
-              --no-commit -o /template-test \
-              ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
-          sudo chown -R runner /template-test
-          cd /template-test
-          swift test
-          docker-compose build
+      - name: Build and test template
+        run: swift test --package-path template-test
+      - name: Build Docker container
+        run: docker compose --project-directory template-test build

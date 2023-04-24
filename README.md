@@ -15,9 +15,9 @@
         <img src="https://github.com/vapor/vapor/workflows/test/badge.svg" alt="Continuous Integration">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.2-brightgreen.svg" alt="Swift 5.2">
+        <img src="http://img.shields.io/badge/swift-5.6-brightgreen.svg" alt="Swift 5.6">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.5-brightgreen.svg" alt="Swift 5.6">
+        <img src="http://img.shields.io/badge/swift-5.8-brightgreen.svg" alt="Swift 5.8">
     </a>
 </p>
