@@ -63,7 +63,7 @@ services:
     deploy:
       replicas: 0{{#db.is_postgres}}
   db:
-    image: postgres:14-alpine
+    image: postgres:15-alpine
     volumes:
       - db_data:/var/lib/postgresql/data/pgdata
     environment:

@@ -9,5 +9,6 @@ Thanks!
 ## Maintainers
 
 - [@0xTim](https://github.com/0xTim)
+- [@gwynne](https://github.com/gwynne)
 
 See the [Vapor maintainers doc](https://github.com/vapor/vapor/blob/main/Docs/maintainers.md) for more information.
