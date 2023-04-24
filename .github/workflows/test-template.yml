@@ -8,7 +8,7 @@ on:
 jobs:
   # Build the toolbox, then run vapor new and build the docker container for all options
   test-new:
-    #if: ${{ !github.event.pull_request.draft }}
+    if: ${{ !github.event.pull_request.draft }}
     strategy:
       fail-fast: false
       matrix:
@@ -33,7 +33,7 @@ jobs:
           swift run --package-path toolbox \
             vapor new template-test \
               --template ${{ github.event.pull_request.head.repo.clone_url }} \
-              --branch ${{ github.head_ref }}
+              --branch ${{ github.head_ref }} \
               --no-commit -o template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template
