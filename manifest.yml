@@ -48,11 +48,9 @@ files:
     dynamic: true
   - folder: Sources
     files:
-      - folder: Run
-        files:
-          - main.swift
       - folder: App
         files:
+          - file: entrypoint.swift
           - file: configure.swift
             dynamic: true
           - file: routes.swift
