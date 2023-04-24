@@ -30,13 +30,13 @@ jobs:
           path: toolbox
       - name: Generate a project from the template
         run: |
-          swift --package-path toolbox run \
+          swift run --package-path toolbox \
             vapor new template-test \
               --template ${{ github.event.pull_request.head.repo.clone_url }} \
               --branch ${{ github.head_ref }}
               --no-commit -o template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template
-        run: swift --package-path template-test test
+        run: swift test --package-path template-test
       - name: Build Docker container
         run: docker compose --project-directory template-test build
