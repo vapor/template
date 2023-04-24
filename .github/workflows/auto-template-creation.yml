@@ -42,7 +42,7 @@ jobs:
             leafflag: --leaf
             repository: fluent-postgres-leaf
     runs-on: ubuntu-latest
-    container: "swift:5.5-focal"
+    container: "swift:5.8-jammy"
     steps:
       - name: Configure git
         run: |
