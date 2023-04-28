@@ -29,11 +29,13 @@ jobs:
           repository: vapor/toolbox
           path: toolbox
       - name: Generate a project from the template
+        env:
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           swift run --package-path toolbox \
             vapor new template-test \
               --template ${{ github.event.pull_request.head.repo.clone_url }} \
-              --branch ${{ github.head_ref }} \
+              --branch $HEAD_REF \
               --no-commit -o template-test \
               ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template
