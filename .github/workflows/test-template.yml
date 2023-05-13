@@ -47,7 +47,7 @@ jobs:
   test-new:
     if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-${{ toJSON(matrix) }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
