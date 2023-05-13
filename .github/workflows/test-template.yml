@@ -80,6 +80,6 @@ jobs:
             ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template in container
         run: |
-          docker run --rm -v "$(pwd):/template-test" "${SWIFT_IMAGE}" bash -c 'swift test --package-path /template-test'
+          docker run --rm -v "$(pwd)/template-test:/template-test" "${SWIFT_IMAGE}" bash -c 'swift test --package-path /template-test'
       - name: Build Docker container
         run: docker compose --project-directory template-test build
