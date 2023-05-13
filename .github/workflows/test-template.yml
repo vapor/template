@@ -2,6 +2,9 @@ name: test
 on:
   pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
   push: { branches: [main] }
+  workflow_call:
+    outputs:
+      cache_key: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
   SWIFT_IMAGE: 'swift:5.8-jammy'
 
@@ -16,7 +19,7 @@ jobs:
       group: cache_toolbox_for_template
       cancel-in-progress: false
     outputs:
-      cache_tag: ${{ steps.latest.outputs.tag }}
+      cache_key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ steps.latest.outputs.tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Get latest toolbox release
@@ -67,7 +70,7 @@ jobs:
       - name: Get cached toolbox
         uses: actions/cache/restore@v3
         with:
-          key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ needs.cache-toolbox.outputs.cache_tag }}
+          key: ${{ needs.cache-toolbox.outputs.cache_key }}
           path: toolbox
           fail-on-cache-miss: true
       - name: Generate a project from the template
