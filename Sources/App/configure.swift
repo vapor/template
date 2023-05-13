@@ -1,4 +1,5 @@
-{{#fluent}}import Fluent
+{{#fluent}}import NIOSSL
+import Fluent
 import Fluent{{fluent.db.module}}Driver
 {{/fluent}}{{#leaf}}import Leaf
 {{/leaf}}import Vapor
