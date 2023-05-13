@@ -6,7 +6,6 @@ env:
   SWIFT_IMAGE: 'swift:5.8-jammy'
 
 jobs:
-
   # Check if a build of most recent release of the toolbox for the runner's OS and arch is cached, build and cache it if not
   # Run for both PRs and pushes to main so every individual PR doesn't have to rebuild the toolbox at least once
   # Use a concurrency group with no cancellation to avoid redundant builds; queued jobs will see the cache when they get their turn
