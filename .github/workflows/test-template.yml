@@ -38,7 +38,7 @@ jobs:
       - name: Build and cache toolbox
         if: ${{ !steps.check.outputs.cache-hit }}
         run: |
-          docker run --rm -v "$(pwd):/toolbox-build" -w /toolbox-build "${SWIFT_IMAGE}" \
+          docker run --rm -v "$(pwd):/toolbox-build" -w /toolbox-build "${SWIFT_IMAGE}" bash -c \
             'swift build -c release --static-swift-stdlib --product vapor && mkdir toolbox && cp .build/release/vapor toolbox/vapor'
     
   # Run vapor new and build the docker container for all combinations of options
@@ -80,6 +80,7 @@ jobs:
             --no-commit -o template-test \
             ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template in container
-        run: docker run --rm -v "$(pwd):/template-test" "${SWIFT_IMAGE}" 'swift test --package-path /template-test'
+        run: |
+          docker run --rm -v "$(pwd):/template-test" "${SWIFT_IMAGE}" bash -c 'swift test --package-path /template-test'
       - name: Build Docker container
         run: docker compose --project-directory template-test build
