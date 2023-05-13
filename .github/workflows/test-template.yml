@@ -1,14 +1,51 @@
 name: test
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 on:
   pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
+  push: { branches: [main] }
 
 jobs:
-  # Build the toolbox, then run vapor new and build the docker container for all options
+
+  # Check if a build of most recent release of the toolbox for the runner's OS and arch is cached, build and cache it if not
+  # Run for both PRs and pushes to main so every individual PR doesn't have to rebuild the toolbox at least once
+  # Use a concurrency group with no cancellation to avoid redundant builds; queued jobs will see the cache when they get their turn
+  cache-toolbox:
+    if: ${{ !(github.event.pull_request.draft || false) }}
+    concurrency:
+      group: cache_toolbox_for_template
+      cancel-in-progress: false
+    outputs:
+      cache_tag: ${{ steps.latest.outputs.tag }}
+    runs-on: ubuntu-latest
+    container: swift:5.8-jammy
+    steps:
+      - name: Get latest toolbox release
+        id: latest
+        run: 'echo "tag=$(curl -fsSL "https://api.github.com/repos/vapor/toolbox/releases/latest" | jq -r .tag_name)" >>"${GITHUB_OUTPUT}"'
+      - name: Check cache
+        id: check
+        uses: actions/cache@v3
+        with:
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ steps.latest.outputs.tag }}
+          path: toolbox
+          lookup-only: true
+      - name: Check out latest toolbox
+        if: ${{ !steps.check.outputs.cache-hit }}
+        uses: actions/checkout@v3
+        with:
+          repository: vapor/toolbox
+          ref: ${{ steps.latest.outputs.tag }}
+      - name: Build and cache toolbox
+        if: ${{ !steps.check.outputs.cache-hit }}
+        run: 'swift build -c release --static-swift-stdlib --product vapor && mkdir toolbox && cp .build/release/vapor toolbox/vapor'
+    
+  # Run vapor new and build the docker container for all combinations of options
+  # Only run for PRs, running on push to main would be redundant.
+  # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
   test-new:
-    if: ${{ !github.event.pull_request.draft }}
+    if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
@@ -22,22 +59,24 @@ jobs:
           - '--leaf'
           - '--no-leaf'
     runs-on: ubuntu-latest
+    container: swift:5.8-jammy
+    needs: cache-toolbox
     steps:
-      - name: Checkout the toolbox
-        uses: actions/checkout@v3
+      - name: Get cached toolbox
+        uses: actions/cache/restore@v3
         with:
-          repository: vapor/toolbox
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ jobs.cache-toolbox.outputs.cache_tag }}
           path: toolbox
+          fail-on-cache-miss: true
       - name: Generate a project from the template
         env:
           HEAD_REF: ${{ github.head_ref }}
+          CLONE_URL: ${{ github.event.pull_request.head.repo.clone_url }}
         run: |
-          swift run --package-path toolbox \
-            vapor new template-test \
-              --template ${{ github.event.pull_request.head.repo.clone_url }} \
-              --branch $HEAD_REF \
-              --no-commit -o template-test \
-              ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+          toolbox/vapor new template-test \
+            --template "${CLONE_URL}" --branch "${HEAD_REF}" \
+            --no-commit -o template-test \
+            ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
       - name: Build and test template
         run: swift test --package-path template-test
       - name: Build Docker container
