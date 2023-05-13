@@ -4,7 +4,8 @@ on:
   push: { branches: [main] }
   workflow_call:
     outputs:
-      cache_key: ${{ jobs.cache-toolbox.outputs.cache_key }}
+      cache_key:
+        value: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
   SWIFT_IMAGE: 'swift:5.8-jammy'
 
