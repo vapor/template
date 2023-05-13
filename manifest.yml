@@ -14,7 +14,7 @@ variables:
               module: Postgres
               url: postgres
               id: psql
-              version: "2.0.0"
+              version: "2.7.2"
               is_postgres: true
           - name: MySQL
             description: ""
