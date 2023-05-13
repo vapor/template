@@ -67,7 +67,7 @@ jobs:
       - name: Get cached toolbox
         uses: actions/cache/restore@v3
         with:
-          key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ jobs.cache-toolbox.outputs.cache_tag }}
+          key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ needs.cache-toolbox.outputs.cache_tag }}
           path: toolbox
           fail-on-cache-miss: true
       - name: Generate a project from the template
