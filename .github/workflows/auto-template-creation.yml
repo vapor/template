@@ -4,7 +4,9 @@
 # It can be manually dispatched to force regeneration of the individual template repos.
 name: Create templates
 on:
-  push: { branches: [main] }
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       dry_run:
