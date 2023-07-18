@@ -16,6 +16,7 @@ variables:
               id: psql
               version: "2.7.2"
               is_postgres: true
+              emoji: "\u1f418"
           - name: MySQL
             description: ""
             data:
@@ -24,6 +25,7 @@ variables:
               id: mysql
               version: "4.0.0"
               is_mysql: true
+              emoji: "\u1f42c"
           - name: SQLite
             description: ""
             data:
@@ -32,6 +34,7 @@ variables:
               id: sqlite
               version: "4.0.0"
               is_sqlite: true
+              emoji: "\u1fab6"
           - name: Mongo
             description: ""
             data:
@@ -40,6 +43,7 @@ variables:
               id: mongo
               version: "1.0.0"
               is_mongo: true
+              emoji: "\u1f331"
   - name: leaf
     description: Would you like to use Leaf?
     type: bool
