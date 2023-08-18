@@ -31,6 +31,9 @@ jobs:
           # No Fluent or Leaf repo
           - repository: template-bare
             flags: --no-fluent --no-leaf
+          # SQLite repo
+          - repository: template-fluent-sqlite
+            flags: --fluent.db sqlite --no-leaf
           # MySQL repo
           - repository: template-fluent-mysql
             flags: --fluent.db mysql --no-leaf
