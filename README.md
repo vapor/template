@@ -15,6 +15,6 @@
         <img src="https://github.com/vapor/template/actions/workflows/test-template.yml/badge.svg?event=push" alt="Continuous Integration">
     </a>
     <a href="https://swift.org">
-        <img src="http://img.shields.io/badge/swift-5.8-brightgreen.svg" alt="Swift 5.8">
+        <img src="http://img.shields.io/badge/swift-5.9-brightgreen.svg" alt="Swift 5.9">
     </a>
 </p>

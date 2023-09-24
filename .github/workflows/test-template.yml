@@ -7,7 +7,7 @@ on:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
-  SWIFT_IMAGE: 'swift:5.8-jammy'
+  SWIFT_IMAGE: 'swift:5.9-jammy'
 
 jobs:
   
@@ -35,7 +35,7 @@ jobs:
           lookup-only: true
       - name: Check out latest toolbox
         if: ${{ !steps.check.outputs.cache-hit }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: vapor/toolbox
           ref: ${{ steps.latest.outputs.tag }}
