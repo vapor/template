@@ -1,7 +1,7 @@
 name: Vapor Template
 variables:
   - name: fluent
-    description: Would you like to use Fluent?
+    description: Would you like to use Fluent (ORM)?
     type: nested
     variables:
       - name: db
@@ -45,7 +45,7 @@ variables:
               is_mongo: true
               emoji: "\U0001F331"
   - name: leaf
-    description: Would you like to use Leaf?
+    description: Would you like to use Leaf (templating)?
     type: bool
 files:
   - file: Package.swift
