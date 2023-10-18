@@ -18,7 +18,7 @@ WORKDIR /build
 # files do not change.
 COPY ./Package.* ./
 RUN swift package resolve --skip-update \
-        "$([ -f ./Package.resolved ] && echo "--force-resolved-versions" || true)"
+        $([ -f ./Package.resolved ] && echo "--force-resolved-versions" || true)
 
 # Copy entire repo into container
 COPY . .
