@@ -7,4 +7,6 @@ DerivedData/
 db.sqlite
 .swiftpm
 .env
+.env.*
+! .env.example
 .vscode
