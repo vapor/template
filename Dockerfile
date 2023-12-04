@@ -55,6 +55,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q install -y \
       ca-certificates \
       tzdata \
+      libjemalloc-dev \
 # If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
       # libcurl4 \
 # If your app or its dependencies import FoundationXML, also install `libxml2`.
@@ -73,11 +74,21 @@ COPY --from=build --chown=vapor:vapor /staging /app
 # Provide configuration needed by the built-in crash reporter and some sensible default behaviors.
 ENV SWIFT_ROOT=/usr SWIFT_BACKTRACE=enable=yes,sanitize=yes,threads=all,images=all,interactive=no
 
+# Set the Jemalloc environment variable to enable it depending on the architecture
+# We do this as a symlink as there's no way to set an ENV value to something computed
+RUN dpkgArch="$(dpkg --print-architecture)"; \
+	case "$dpkgArch" in \
+		arm64) ln -s /usr/lib/aarch64-linux-gnu/libjemalloc.so /usr/lib/libjemalloc.so ;; \
+		x86) ln -s /usr/lib/x86_64-linux-gnu/libjemalloc.so /usr/lib/libjemalloc.so ;; \
+	esac;
+
 # Ensure all further commands run as the vapor user
 USER vapor:vapor
 
 # Let Docker bind to port 8080
 EXPOSE 8080
+
+ENV LD_PRELOAD=/usr/lib/libjemalloc.so
 
 # Start the Vapor service when the image is run, default to listening on 8080 in production environment
 ENTRYPOINT ["./App"]
