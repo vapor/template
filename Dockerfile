@@ -6,9 +6,8 @@ FROM swift:5.9-jammy as build
 # Install OS updates
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update \
-    && apt-get -q dist-upgrade -y\
-    && apt-get install -y libjemalloc-dev\
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get -q dist-upgrade -y \
+    && apt-get install -y libjemalloc-dev
 
 # Set up a build area
 WORKDIR /build
@@ -25,7 +24,9 @@ RUN swift package resolve --skip-update \
 COPY . .
 
 # Build everything, with optimizations, with static linking, and using jemalloc
-RUN swift build -c release --static-swift-stdlib \
+# N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
+RUN swift build -c release \
+                --static-swift-stdlib \
                 -Xlinker -ljemalloc
 
 # Switch to the staging area
@@ -55,6 +56,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
     && apt-get -q update \
     && apt-get -q dist-upgrade -y \
     && apt-get -q install -y \
+      libjemalloc2 \
       ca-certificates \
       tzdata \
 # If your app or its dependencies import FoundationNetworking, also install `libcurl4`.
