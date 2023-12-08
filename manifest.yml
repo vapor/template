@@ -90,5 +90,7 @@ files:
     dynamic: true
   - file: docker-compose.yml
     dynamic: true
+  - file: README.md
+    dynamic: true
   - .gitignore
   - .dockerignore
