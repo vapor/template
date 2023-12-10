@@ -4,11 +4,11 @@
 
 To open run
 ```bash
-   open Package.swift
+  open Package.swift
 ```
 To run
 ```bash
-   swift run App
+  swift run App
 ```
 To test
 ```bash
