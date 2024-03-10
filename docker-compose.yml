@@ -74,7 +74,7 @@ services:
     ports:
       - '5432:5432'{{/db.is_postgres}}{{#db.is_mysql}}
   db:
-    image: mysql:8.0
+    image: mysql:8
     volumes:
       - db_data:/var/lib/mysql
     environment:
