@@ -7,7 +7,7 @@ on:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
-  SWIFT_IMAGE: 'swift:5.9-jammy'
+  SWIFT_IMAGE: 'swift:5.10-jammy'
 
 jobs:
   
