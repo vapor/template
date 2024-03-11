@@ -5,19 +5,17 @@ struct TodoController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let todos = routes.grouped("todos")
 
-        todos.get(use: self.index)
-        todos.post(use: self.create)
+        todos.get(use: { try await self.index(req: $0) })
+        todos.post(use: { try await self.create(req: $0) })
         todos.group(":todoID") { todo in
-            todo.delete(use: self.delete)
+            todo.delete(use: { try await self.delete(req: $0) })
         }
     }
     
-    @Sendable
     func index(req: Request) async throws -> [Todo] {
         try await Todo.query(on: req.db).all()
     }
 
-    @Sendable
     func create(req: Request) async throws -> Todo {
         let todo = try req.content.decode(Todo.self)
 
@@ -25,7 +23,6 @@ struct TodoController: RouteCollection {
         return todo
     }
 
-    @Sendable
     func delete(req: Request) async throws -> HTTPStatus {
         guard let todo = try await Todo.find(req.parameters.get("todoID"), on: req.db) else {
             throw Abort(.notFound)
