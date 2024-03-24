@@ -14,7 +14,7 @@ variables:
               module: Postgres
               url: postgres
               id: psql
-              version: "2.7.2"
+              version: "2.8.0"
               is_postgres: true
               emoji: "\U0001F418"
           - name: MySQL
@@ -23,7 +23,7 @@ variables:
               module: MySQL
               url: mysql
               id: mysql
-              version: "4.0.0"
+              version: "4.4.0"
               is_mysql: true
               emoji: "\U0001F42C"
           - name: SQLite
@@ -32,7 +32,7 @@ variables:
               module: SQLite
               url: sqlite
               id: sqlite
-              version: "4.0.0"
+              version: "4.6.0"
               is_sqlite: true
               emoji: "\U0001FAB6"
           - name: Mongo
@@ -41,7 +41,7 @@ variables:
               module: Mongo
               url: mongo
               id: mongo
-              version: "1.0.0"
+              version: "1.3.1"
               is_mongo: true
               emoji: "\U0001F331"
   - name: leaf
