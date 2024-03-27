@@ -32,12 +32,6 @@ let package = Package(
             dependencies: [
                 .target(name: "App"),
                 .product(name: "XCTVapor", package: "vapor"),
-    
-                // Workaround for https://github.com/apple/swift-package-manager/issues/6940
-                .product(name: "Vapor", package: "vapor"),{{#fluent}}
-                .product(name: "Fluent", package: "Fluent"),
-                .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}{{#leaf}}
-                .product(name: "Leaf", package: "leaf"),{{/leaf}}
             ],
             swiftSettings: swiftSettings
         )
