@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class Todo: Model, Content {
+final class Todo: Model, Content, @unchecked Sendable {
     static let schema = "todos"
     
     @ID(key: .id)
