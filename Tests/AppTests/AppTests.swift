@@ -33,7 +33,7 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(
                 try res.content.decode([TodoDTO].self).sorted(by: { $0.title ?? "" < $1.title ?? "" }),
-                sampleTodos.map(\.dto).sorted(by: { $0.title ?? "" < $1.title ?? "" })
+                sampleTodos.map { $0.toDTO() }.sorted(by: { $0.title ?? "" < $1.title ?? "" })
             )
         })
     }
@@ -46,7 +46,7 @@ final class AppTests: XCTestCase {
         }, afterResponse: { res in
             XCTAssertEqual(res.status, .ok)
             let models = try await Todo.query(on: self.app.db).all()
-            XCTAssertEqual(models.map(\.dto.title), [newDTO.title])
+            XCTAssertEqual(models.map { $0.toDTO().title }, [newDTO.title])
         })
     }
     
