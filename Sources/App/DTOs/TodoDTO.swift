@@ -5,7 +5,7 @@ struct TodoDTO: Content {
     var id: UUID?
     var title: String?
     
-    var model: Todo {
+    func toModel() -> Todo {
         let model = Todo()
         
         model.id = self.id

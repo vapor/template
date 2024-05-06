@@ -13,14 +13,14 @@ struct TodoController: RouteCollection {
     }
         
     func index(req: Request) async throws -> [TodoDTO] {
-        try await Todo.query(on: req.db).all().map(\.dto)
+        try await Todo.query(on: req.db).all().map { $0.toDTO() }
     }
 
     func create(req: Request) async throws -> TodoDTO {
-        let todo = try req.content.decode(TodoDTO.self).model
+        let todo = try req.content.decode(TodoDTO.self).toModel()
 
         try await todo.save(on: req.db)
-        return todo.dto
+        return todo.toDTO()
     }
 
     func delete(req: Request) async throws -> HTTPStatus {
