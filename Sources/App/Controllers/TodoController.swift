@@ -11,16 +11,16 @@ struct TodoController: RouteCollection {
             todo.delete(use: { try await self.delete(req: $0) })
         }
     }
-    
-    func index(req: Request) async throws -> [Todo] {
-        try await Todo.query(on: req.db).all()
+        
+    func index(req: Request) async throws -> [TodoDTO] {
+        try await Todo.query(on: req.db).all().map { $0.toDTO() }
     }
 
-    func create(req: Request) async throws -> Todo {
-        let todo = try req.content.decode(Todo.self)
+    func create(req: Request) async throws -> TodoDTO {
+        let todo = try req.content.decode(TodoDTO.self).toModel()
 
         try await todo.save(on: req.db)
-        return todo
+        return todo.toDTO()
     }
 
     func delete(req: Request) async throws -> HTTPStatus {

@@ -63,6 +63,10 @@ files:
             if: fluent
             files:
               - Todo.swift
+          - folder: DTOs
+            if: fluent
+            files:
+              - TodoDTO.swift
           - folder: Migrations
             if: fluent
             files:
@@ -76,7 +80,8 @@ files:
     files:
       - folder: AppTests
         files:
-          - AppTests.swift
+          - file: AppTests.swift
+            dynamic: true
   - folder: Resources
     if: leaf
     files:
