@@ -14,7 +14,9 @@ let package = Package(
         // {{fluent.db.emoji}} Fluent driver for {{fluent.db.module}}.
         .package(url: "https://github.com/vapor/fluent-{{fluent.db.url}}-driver.git", from: "{{fluent.db.version}}"),{{/fluent}}{{#leaf}}
         // 🍃 An expressive, performant, and extensible templating language built for Swift.
-        .package(url: "https://github.com/vapor/leaf.git", from: "4.3.0"),{{/leaf}}
+        .package(url: "https://github.com/vapor/leaf.git", from: "4.3.0"),{{/leaf}},
+        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
     ],
     targets: [
         .executableTarget(
@@ -24,6 +26,8 @@ let package = Package(
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}{{#leaf}}
                 .product(name: "Leaf", package: "leaf"),{{/leaf}}
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "NIOCore", package: "swift-nio"),
+                .product(name: "NIOPosix", package: "swift-nio"),
             ],
             swiftSettings: swiftSettings
         ),
