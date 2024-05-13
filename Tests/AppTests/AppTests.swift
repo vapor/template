@@ -7,7 +7,7 @@ final class AppTests: XCTestCase {
     var app: Application!
     
     override func setUp() async throws {
-        self.app = Application.make(.testing)
+        self.app = try await Application.make(.testing)
         try await configure(app){{#fluent}}
         try await app.autoMigrate(){{/fluent}}
     }
@@ -29,7 +29,7 @@ final class AppTests: XCTestCase {
         let sampleTodos = [Todo(title: "sample1"), Todo(title: "sample2")]
         try await sampleTodos.create(on: self.app.db)
         
-        try await self.app.test(.GET, "todos", afterResponse: { res async in
+        try await self.app.test(.GET, "todos", afterResponse: { res async throws in
             XCTAssertEqual(res.status, .ok)
             XCTAssertEqual(
                 try res.content.decode([TodoDTO].self).sorted(by: { $0.title ?? "" < $1.title ?? "" }),
@@ -43,7 +43,7 @@ final class AppTests: XCTestCase {
         
         try await self.app.test(.POST, "todos", beforeRequest: { req in
             try req.content.encode(newDTO)
-        }, afterResponse: { res async in
+        }, afterResponse: { res async throws in
             XCTAssertEqual(res.status, .ok)
             let models = try await Todo.query(on: self.app.db).all()
             XCTAssertEqual(models.map { $0.toDTO().title }, [newDTO.title])
@@ -54,7 +54,7 @@ final class AppTests: XCTestCase {
         let testTodos = [Todo(title: "test1"), Todo(title: "test2")]
         try await testTodos.create(on: app.db)
         
-        try await self.app.test(.DELETE, "todos/\(testTodos[0].requireID())", afterResponse: { res async in
+        try await self.app.test(.DELETE, "todos/\(testTodos[0].requireID())", afterResponse: { res async throws in
             XCTAssertEqual(res.status, .noContent)
             let model = try await Todo.find(testTodos[0].id, on: self.app.db)
             XCTAssertNil(model)
