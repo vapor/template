@@ -5,10 +5,10 @@ struct TodoController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let todos = routes.grouped("todos")
 
-        todos.get(self.index)
-        todos.post(self.create)
+        todos.get(use: self.index)
+        todos.post(use: self.create)
         todos.group(":todoID") { todo in
-            todo.delete(self.delete)
+            todo.delete(use: self.delete)
         }
     }
 
