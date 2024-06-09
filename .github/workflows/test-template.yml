@@ -21,7 +21,7 @@ jobs:
       cancel-in-progress: false
     outputs:
       cache_key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ steps.latest.outputs.tag }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get latest toolbox release
         id: latest
@@ -74,7 +74,7 @@ jobs:
             dbhostname: psql
           - fluentflags: '--fluent.db mongo'
             dbhosturl: 'mongodb://mongo:27017/vapor_database'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     container: ${{ matrix.swift-image }}
     needs: cache-toolbox
     services:
@@ -138,7 +138,7 @@ jobs:
           - '--leaf'
           - '--no-leaf'
     needs: cache-toolbox
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get cached toolbox
         uses: actions/cache/restore@v4
