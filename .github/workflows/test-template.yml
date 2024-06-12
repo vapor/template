@@ -7,7 +7,7 @@ on:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
-  SWIFT_IMAGE: 'swift:5.10-jammy'
+  SWIFT_IMAGE: 'swift:5.10-noble'
 
 jobs:
   
@@ -57,7 +57,7 @@ jobs:
       fail-fast: false
       matrix:
         swift-image:
-          - 'swift:5.10-jammy'
+          - 'swift:5.10-noble'
         fluentflags:
           - '--no-fluent'
           #- '--fluent.db mysql' # The MySQL image can't be configured usably via GH Actions at this time
@@ -138,7 +138,7 @@ jobs:
           - '--leaf'
           - '--no-leaf'
     needs: cache-toolbox
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get cached toolbox
         uses: actions/cache/restore@v4
