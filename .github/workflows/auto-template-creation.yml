@@ -43,7 +43,7 @@ jobs:
           # Postgres with Leaf repo
           - repository: template-fluent-postgres-leaf
             flags: --fluent.db postgres --leaf
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Get token
         id: get-token
