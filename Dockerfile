@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.10-noble as build
+FROM swift:5.10-noble AS build
 
 # Install OS updates
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
