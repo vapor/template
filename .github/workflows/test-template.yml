@@ -7,10 +7,10 @@ on:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
 env:
-  SWIFT_IMAGE: 'swift:6.0-noble'
+  SWIFT_IMAGE: 'swift:6.0-jammy'
 
 jobs:
-  
+
   # Check if a build of most recent release of the toolbox for the runner's OS and arch is cached, build and cache it if not
   # Run for both PRs and pushes to main so every individual PR doesn't have to rebuild the toolbox at least once
   # Use a concurrency group with no cancellation to avoid redundant builds; queued jobs will see the cache when they get their turn
@@ -44,7 +44,7 @@ jobs:
         run: |
           docker run --rm -v "$(pwd):/toolbox-build" -w /toolbox-build "${SWIFT_IMAGE}" bash -c \
             'swift build -c release --static-swift-stdlib --product vapor && mkdir toolbox && cp .build/release/vapor toolbox/vapor'
-    
+
   # Run vapor new and test the template for all combinations of options
   # Only run for PRs, running on push to main would be redundant.
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
@@ -57,7 +57,7 @@ jobs:
       fail-fast: false
       matrix:
         swift-image:
-          - 'swift:6.0-noble'
+          - 'swift:6.0-jammy'
         fluentflags:
           - '--no-fluent'
           #- '--fluent.db mysql' # The MySQL image can't be configured usably via GH Actions at this time
@@ -116,7 +116,7 @@ jobs:
         env:
           DATABASE_HOST: ${{ matrix.dbhostname }}
           DATABASE_URL: ${{ matrix.dbhosturl }}
-    
+
   # Run vapor new and build the container with Docker Compose for all combinations of options
   # Only run for PRs, running on push to main would be redundant.
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
