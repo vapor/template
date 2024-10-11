@@ -12,9 +12,9 @@ struct AppTests {
         let app = try await Application.make(.testing)
         try await configure(app)
         {{#fluent}}try await app.autoMigrate()   
-        {{/fluent}}try await test(app)
+{{/fluent}}        try await test(app)
         {{#fluent}}try await app.autoRevert()   
-        {{/fluent}}try await app.asyncShutdown()
+{{/fluent}}        try await app.asyncShutdown()
     }
     
     @Test("Test Hello World Route")
