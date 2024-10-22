@@ -10,11 +10,17 @@ import Testing
 struct AppTests {
     private func withApp(_ test: (Application) async throws -> ()) async throws {
         let app = try await Application.make(.testing)
-        try await configure(app)
-        {{#fluent}}try await app.autoMigrate()   
-{{/fluent}}        try await test(app)
-        {{#fluent}}try await app.autoRevert()   
-{{/fluent}}        try await app.asyncShutdown()
+        do {
+            try await configure(app)
+            {{#fluent}}try await app.autoMigrate()   
+{{/fluent}}            try await test(app)
+            {{#fluent}}try await app.autoRevert()   
+{{/fluent}}        }
+        catch {
+            try await app.asyncShutdown()
+            throw error
+        }
+        try await app.asyncShutdown()
     }
     
     @Test("Test Hello World Route")
