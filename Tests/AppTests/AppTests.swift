@@ -12,13 +12,13 @@ struct AppTests {
         let app = try await Application.make(.testing)
         do {
             try await configure(app)
-            {{#fluent}}try await app.autoRevert()
-            try await app.autoMigrate()
+            {{#fluent}}try await app.autoMigrate()
 {{/fluent}}            try await test(app)
             {{#fluent}}try await app.autoRevert()   
 {{/fluent}}        }
         catch {
-            try await app.asyncShutdown()
+            {{#fluent}}try? await app.autoRevert()
+{{/fluent}}            try await app.asyncShutdown()
             throw error
         }
         try await app.asyncShutdown()
