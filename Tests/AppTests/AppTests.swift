@@ -17,7 +17,8 @@ struct AppTests {
             {{#fluent}}try await app.autoRevert()   
 {{/fluent}}        }
         catch {
-            try await app.asyncShutdown()
+            {{#fluent}}try? await app.autoRevert()
+{{/fluent}}            try await app.asyncShutdown()
             throw error
         }
         try await app.asyncShutdown()
