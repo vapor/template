@@ -13,8 +13,7 @@
 # Start database: docker compose up db
 # Run migrations: docker compose run migrate{{/db.is_sqlite}}{{/fluent}}
 #       Stop all: docker compose down{{#fluent}}{{^db.is_sqlite}} (add -v to wipe db){{/db.is_sqlite}}{{/fluent}}
-#
-version: '3.7'{{#fluent}}{{^db.is_sqlite}}
+#{{#fluent}}{{^db.is_sqlite}}
 
 volumes:
   db_data:{{/db.is_sqlite}}{{/fluent}}
