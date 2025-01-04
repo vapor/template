@@ -23,11 +23,12 @@ RUN swift package resolve \
 # Copy entire repo into container
 COPY . .
 
-# Build everything, with optimizations, with static linking, and using jemalloc
+# Build the application, with optimizations, with static linking, and using jemalloc
 # N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
 RUN swift build -c release \
-                --static-swift-stdlib \
-                -Xlinker -ljemalloc
+        --product App \
+        --static-swift-stdlib \
+        -Xlinker -ljemalloc
 
 # Switch to the staging area
 WORKDIR /staging
