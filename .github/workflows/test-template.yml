@@ -67,6 +67,9 @@ jobs:
         leafflags:
           - '--leaf'
           - '--no-leaf'
+        vscodeflags:
+          - '--vscode'
+          - '--no-vscode'
         include:
           #- fluentflags: '--fluent.db mysql'
           #  dbhostname: mysql
@@ -110,7 +113,7 @@ jobs:
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
             --no-commit -o template-test \
-            ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+            ${{ matrix.fluentflags }} ${{ matrix.leafflags }} ${{ matrix.vscodeflags }}
       - name: Build and test template
         run: swift test --package-path template-test
         env:
@@ -137,6 +140,9 @@ jobs:
         leafflags:
           - '--leaf'
           - '--no-leaf'
+        vscodeflags:
+          - '--vscode'
+          - '--no-vscode'
     needs: cache-toolbox
     runs-on: ubuntu-24.04
     steps:
@@ -154,6 +160,6 @@ jobs:
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
             --no-commit -o template-test \
-            ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+            ${{ matrix.fluentflags }} ${{ matrix.leafflags }} ${{ matrix.vscodeflags }}
       - name: Build Docker container
         run: docker compose --project-directory template-test build
