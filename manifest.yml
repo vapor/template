@@ -47,6 +47,9 @@ variables:
   - name: leaf
     description: Would you like to use Leaf (templating)?
     type: bool
+  - name: vscode
+    description: Would you like to include Visual Studio Code snippets?
+    type: bool
 files:
   - file: Package.swift
     dynamic: true
@@ -95,5 +98,9 @@ files:
     dynamic: true
   - file: docker-compose.yml
     dynamic: true
+  - folder: .vscode
+    if: vscode
+    files:
+      - file: vapor.code-snippets
   - .gitignore
   - .dockerignore

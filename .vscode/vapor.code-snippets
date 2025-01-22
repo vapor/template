@@ -1,0 +1,19 @@
+{
+    "Endpoint": {
+        "prefix": "endpoint",
+        "body": [
+            "@Sendable",
+            "func ${1:functionName}(req: Request) async throws -> ${2:returnValue} {",
+            "\t${3:statements}",
+            "}"
+        ],
+        "description": "Vapor: Endpoint function"
+    },
+    "throw Abort": {
+        "prefix": "abort",
+        "body": [
+            "throw Abort(${code})"
+        ],
+        "description": "Vapor: throw Abort"
+    }
+}
