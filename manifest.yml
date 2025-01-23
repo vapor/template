@@ -106,5 +106,6 @@ files:
     if: vscode
     files:
       - file: vapor.code-snippets
+        if: vscode.snippets
   - .gitignore
   - .dockerignore
