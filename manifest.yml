@@ -48,8 +48,12 @@ variables:
     description: Would you like to use Leaf (templating)?
     type: bool
   - name: vscode
-    description: Would you like to include Visual Studio Code snippets?
-    type: bool
+    description: Will you use Visual Studio Code for development?
+    type: nested
+    variables:
+      - name: snippets
+        description: Would you like to include Visual Studio Code snippets?
+        type: bool
 files:
   - file: Package.swift
     dynamic: true
