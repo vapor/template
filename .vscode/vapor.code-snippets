@@ -1,0 +1,44 @@
+{
+    "Endpoint": {
+        "prefix": "endpoint",
+        "body": [
+            "@Sendable",
+            "func ${1:functionName}(req: Request) async throws -> ${2:returnValue} {",
+            "\t${3:statements}",
+            "}"
+        ],
+        "description": "Vapor: Endpoint function"
+    },
+    "AsyncMiddleware": {
+        "prefix": "middleware",
+        "body": [
+            "struct ${1:Name}Middleware: AsyncMiddleware {",
+            "\tfunc respond(to request: Request, chainingTo next: AsyncResponder) async throws -> Response {",
+            "\t\t${2:return try await next.respond(to: request)}",
+            "\t}",
+            "}"
+        ],
+        "description": "Vapor: AsyncMiddleware"
+    },
+    "req.parameters.get": {
+        "prefix": "parameter",
+        "body": [
+            "req.parameters.get(\"${2:parameterName}\")"
+        ],
+        "description": "Vapor: Extract parameter from request path"
+    },
+    "try req.content.decode": {
+        "prefix": "decode",
+        "body": [
+            "try req.content.decode(${1:Type}.self)"
+        ],
+        "description": "Vapor: Decode request content"
+    },
+    "throw Abort": {
+        "prefix": "abort",
+        "body": [
+            "throw Abort(${code})"
+        ],
+        "description": "Vapor: throw Abort"
+    }
+}

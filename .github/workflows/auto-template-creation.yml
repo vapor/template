@@ -30,19 +30,19 @@ jobs:
         include:
           # No Fluent or Leaf repo
           - repository: template-bare
-            flags: --no-fluent --no-leaf
+            flags: --no-fluent --no-leaf --no-vscode
           # SQLite repo
           - repository: template-fluent-sqlite
-            flags: --fluent.db sqlite --no-leaf
+            flags: --fluent.db sqlite --no-leaf --no-vscode
           # MySQL repo
           - repository: template-fluent-mysql
-            flags: --fluent.db mysql --no-leaf
+            flags: --fluent.db mysql --no-leaf --no-vscode
           # Postgres repo
           - repository: template-fluent-postgres
-            flags: --fluent.db postgres --no-leaf
+            flags: --fluent.db postgres --no-leaf --no-vscode
           # Postgres with Leaf repo
           - repository: template-fluent-postgres-leaf
-            flags: --fluent.db postgres --leaf
+            flags: --fluent.db postgres --leaf --no-vscode
     runs-on: ubuntu-24.04
     steps:
       - name: Get token
