@@ -83,7 +83,7 @@ files:
         dynamic_name: "{{name}}Tests"
         files:
           - file: AppTests.swift
-            dynamic_name: "{{name}}Tests"
+            dynamic_name: "{{name}}Tests.swift"
             dynamic: true
   - folder: Resources
     if: leaf
