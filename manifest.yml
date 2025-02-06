@@ -53,6 +53,7 @@ files:
   - folder: Sources
     files:
       - folder: App
+        dynamic_name: "{{name}}"
         files:
           - file: entrypoint.swift
           - file: configure.swift
@@ -79,8 +80,10 @@ files:
   - folder: Tests
     files:
       - folder: AppTests
+        dynamic_name: "{{name}}Tests"
         files:
           - file: AppTests.swift
+            dynamic_name: "{{name}}Tests"
             dynamic: true
   - folder: Resources
     if: leaf
