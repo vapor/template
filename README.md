@@ -20,9 +20,9 @@ vapor new <ProjectName>
 ```
 
 > [!TIP]
-> Vapor and the template now use `async/await` by default. If you cannot update to macOS 12 and/or need to continue to use `EventLoopFuture`s, add the `--branch macos10-15` flag.
+> Vapor and the template use `async/await` by default. If you cannot update to macOS 12 and/or need to continue to use `EventLoopFuture`s, add the `--branch macos10-15` flag.
 
-This will create a new Vapor project in the current directory.
+This will create a new folder in the current directory containing the project.
 You can then move into the project directory:
 
 ```sh
