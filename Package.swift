@@ -39,11 +39,9 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         )
-    ],
-    swiftLanguageModes: [.v5]
+    ]
 )
 
 var swiftSettings: [SwiftSetting] { [
-    .enableUpcomingFeature("DisableOutwardActorInference"),
-    .enableExperimentalFeature("StrictConcurrency"),
+    .enableUpcomingFeature("ExistentialAny"),
 ] }
