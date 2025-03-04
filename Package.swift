@@ -39,7 +39,7 @@ let package = Package(
             ],
             swiftSettings: swiftSettings
         )
-    ],
+    ]
 )
 
 var swiftSettings: [SwiftSetting] { [
