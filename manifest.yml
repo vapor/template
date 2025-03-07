@@ -97,3 +97,6 @@ files:
     dynamic: true
   - .gitignore
   - .dockerignore
+  - folder: .vscode
+    files:
+      - extensions.json
