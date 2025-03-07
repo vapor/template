@@ -91,6 +91,9 @@ files:
   - folder: Public
     files:
       - .gitkeep
+  - file: TEMPLATE_README.md
+    dynamic_name: README.md
+    dynamic: true
   - file: Dockerfile
     dynamic: true
   - file: docker-compose.yml
