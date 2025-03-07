@@ -9,4 +9,3 @@ db.sqlite
 .env
 .env.*
 !.env.example
-.vscode
