@@ -26,8 +26,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateTodo()){{/fluent}}{{#leaf}}
 
-    app.views.use(.leaf)
-    {{/leaf}}
+    app.views.use(.leaf){{/leaf}}
 
     // register routes
     try routes(app)
