@@ -13,7 +13,7 @@ The official Vapor template, used by the [Vapor Toolbox](https://github.com/vapo
 
 ## Overview
 
-After having installed the [Vapor Toolbox](https://github.com/vapor/toolbox), you can use the following command in your terminal, replacing `<ProjectName>` with your desired project name, to create a new project using this template:
+After having installed the [Vapor Toolbox](https://docs.vapor.codes/install/macos/#install-toolbox), you can use the following command in your terminal, replacing `<ProjectName>` with your desired project name, to create a new project using this template:
 
 ```sh
 vapor new <ProjectName>
