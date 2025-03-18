@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 
 struct TodoController: RouteCollection {
-    func boot(routes: RoutesBuilder) throws {
+    func boot(routes: any RoutesBuilder) throws {
         let todos = routes.grouped("todos")
 
         todos.get(use: self.index)
