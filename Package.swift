@@ -20,7 +20,7 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "App",
+            name: "{{name}}",
             dependencies: [{{#fluent}}
                 .product(name: "Fluent", package: "fluent"),
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}{{#leaf}}
@@ -32,9 +32,9 @@ let package = Package(
             swiftSettings: swiftSettings
         ),
         .testTarget(
-            name: "AppTests",
+            name: "{{name}}Tests",
             dependencies: [
-                .target(name: "App"),
+                .target(name: "{{name}}"),
                 .product(name: "VaporTesting", package: "vapor"),
             ],
             swiftSettings: swiftSettings

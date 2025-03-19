@@ -1,4 +1,4 @@
-@testable import App
+@testable import {{name}}
 import VaporTesting
 import Testing
 {{#fluent}}import Fluent
@@ -7,7 +7,7 @@ import Testing
 {{#fluent}}@Suite("App Tests with DB", .serialized)
 {{/fluent}}{{^fluent}}@Suite("App Tests")
 {{/fluent}}
-struct AppTests {
+struct {{name}}Tests {
     private func withApp(_ test: (Application) async throws -> ()) async throws {
         let app = try await Application.make(.testing)
         do {
