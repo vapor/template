@@ -8,20 +8,21 @@ import Testing
 {{/fluent}}{{^fluent}}@Suite("App Tests")
 {{/fluent}}
 struct {{name}}Tests {
+    {{#fluent}}
     private func withApp(_ test: (Application) async throws -> ()) async throws {
         let app = try await Application.make(.testing)
         do {
-            try await configure(app){{#fluent}}
-            try await app.autoMigrate(){{/fluent}}
-            try await test(app){{#fluent}}
-            try await app.autoRevert(){{/fluent}}
+            try await configure(app)
+            try await app.autoMigrate()
+            try await test(app)
+            try await app.autoRevert()
         } catch {
-            {{#fluent}}try? await app.autoRevert()
-            {{/fluent}}try await app.asyncShutdown()
+            try? await app.autoRevert()
+            try await app.asyncShutdown()
             throw error
         }
         try await app.asyncShutdown()
-    }
+    }{{/fluent}}
     
     @Test("Test Hello World Route")
     func helloWorld() async throws {
