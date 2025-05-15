@@ -9,7 +9,7 @@ import Testing
 {{/fluent}}
 struct {{name}}Tests {
     {{#fluent}}private func withApp(_ test: (Application) async throws -> ()) async throws {
-        try await withApp(configure: configure) { app in
+        try await VaporTesting.withApp(configure: configure) { app in
             do {
                 try await app.autoMigrate()
                 try await test(app)
