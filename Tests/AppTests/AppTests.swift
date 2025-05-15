@@ -25,7 +25,7 @@ struct {{name}}Tests {
     
     {{/fluent}}@Test("Test Hello World Route")
     func helloWorld() async throws {
-        try await withApp { app in
+        try await withApp{{^fluent}}(configure: configure){{/fluent}} { app in
             try await app.testing().test(.GET, "hello", afterResponse: { res async in
                 #expect(res.status == .ok)
                 #expect(res.body.string == "Hello, world!")
