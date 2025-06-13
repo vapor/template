@@ -25,22 +25,24 @@ COPY . .
 
 # Build the application, with optimizations, with static linking, and using jemalloc
 # N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
-RUN swift build -c release \
+RUN mkdir /staging
+
+# Copy static swift backtracer binary to staging area
+RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" /staging
+
+RUN --mount=type=cache,target=/build/.build \
+    swift build -c release \
         --product {{name}} \
         --static-swift-stdlib \
-        -Xlinker -ljemalloc
+        -Xlinker -ljemalloc && \
+    # Copy main executable to staging area
+    cp "$(swift build --package-path /build -c release --show-bin-path)/{{name}}" /staging && \
+    # Copy resources bundled by SPM to staging area
+    find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} /staging \;
+
 
 # Switch to the staging area
 WORKDIR /staging
-
-# Copy main executable to staging area
-RUN cp "$(swift build --package-path /build -c release --show-bin-path)/{{name}}" ./
-
-# Copy static swift backtracer binary to staging area
-RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
-
-# Copy resources bundled by SPM to staging area
-RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./ \;
 
 # Copy any resources from the public directory and views directory if the directories exist
 # Ensure that by default, neither the directory nor any of its contents are writable.
