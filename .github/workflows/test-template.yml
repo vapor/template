@@ -60,44 +60,46 @@ jobs:
           - 'swift:6.1-noble'
         fluentflags:
           - '--no-fluent'
-          #- '--fluent.db mysql' # The MySQL image can't be configured usably via GH Actions at this time
+          - '--fluent.db mysql'
           - '--fluent.db postgres'
           - '--fluent.db sqlite'
         leafflags:
           - '--leaf'
           - '--no-leaf'
         include:
-          #- fluentflags: '--fluent.db mysql'
-          #  dbhostname: mysql
+          - fluentflags: '--fluent.db mysql'
+            dbhostname: mysql
           - fluentflags: '--fluent.db postgres'
             dbhostname: psql
     runs-on: ubuntu-latest
-    container: ${{ matrix.swift-image }}
+    container:
+      image: ${{ matrix.swift-image }}
+      volumes: [ 'mysqlshare:/mysql' ]
     needs: cache-toolbox
     services:
-      #mysql:
-      #  image: mysql:latest
-      #  env: { MYSQL_ALLOW_EMPTY_PASSWORD: 'true', MYSQL_USER: vapor_username, MYSQL_PASSWORD: vapor_password, MYSQL_DATABASE: vapor_database }
+      mysql:
+        image: mysql:latest
+        volumes: [ 'mysqlshare:/var/run/mysqld' ]
+        env: { MYSQL_ALLOW_EMPTY_PASSWORD: 'true', MYSQL_USER: vapor_username, MYSQL_PASSWORD: vapor_password, MYSQL_DATABASE: vapor_database }
       psql:
         image: postgres:latest
         env: { POSTGRES_USER: vapor_username, POSTGRES_DB: vapor_database, POSTGRES_PASSWORD: vapor_password,
                POSTGRES_HOST_AUTH_METHOD: 'scram-sha-256', POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256' }
     steps:
+      - name: Install zstd for cache action
+        run: apt-get update && apt-get install -y zstd
       - name: Get cached toolbox
         id: get-cache
         uses: actions/cache/restore@v4
         with:
           key: ${{ needs.cache-toolbox.outputs.cache_key }}
           path: toolbox
-          fail-on-cache-miss: false
-      - name: Build toolbox inside container if cache fails
-        if: ${{ steps.get-cache.cache_hit != 'true' }}
+          fail-on-cache-miss: true
+      - name: Fix MySQL config when testing MySQL
+        if: ${{ matrix.fluentflags == '--fluent.db mysql' }}
         run: |
-          apt-get update && apt-get install -y curl jq
-          tag="$(curl -fsSL "https://api.github.com/repos/vapor/toolbox/releases/latest" | jq -r .tag_name)"
-          git clone https://github.com/vapor/toolbox.git -b "${tag}" toolbox
-          swift build --package-path toolbox -c debug --product vapor
-          cp toolbox/.build/debug/vapor toolbox/vapor
+          apt-get update && apt-get install -y 'mysql-client-core-*'
+          echo "SET PERSIST ssl_ca='',ssl_cert='',ssl_key='';ALTER INSTANCE RELOAD TLS NO ROLLBACK ON ERROR;" | mysql -BS/mysql/mysqld.sock
       - name: Generate a project from the template
         env:
           HEAD_REF: ${{ github.head_ref }}
@@ -133,7 +135,7 @@ jobs:
           - '--leaf'
           - '--no-leaf'
     needs: cache-toolbox
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Get cached toolbox
         uses: actions/cache/restore@v4
