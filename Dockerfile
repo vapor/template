@@ -33,9 +33,9 @@ RUN --mount=type=cache,target=/build/.build \
         --static-swift-stdlib \
         -Xlinker -ljemalloc && \
     # Copy main executable to staging area
-    cp "$(swift build --package-path /build -c release --show-bin-path)/{{name}}" /staging && \
+    cp "$(swift build -c release --show-bin-path)/{{name}}" /staging && \
     # Copy resources bundled by SPM to staging area
-    find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} /staging \;
+    find -L "$(swift build -c release --show-bin-path)" -regex '.*\.resources$' -exec cp -Ra {} /staging \;
 
 
 # Switch to the staging area
