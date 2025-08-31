@@ -23,13 +23,10 @@ RUN swift package resolve \
 # Copy entire repo into container
 COPY . .
 
-# Build the application, with optimizations, with static linking, and using jemalloc
-# N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
 RUN mkdir /staging
 
-# Copy static swift backtracer binary to staging area
-RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" /staging
-
+# Build the application, with optimizations, with static linking, and using jemalloc
+# N.B.: The static version of jemalloc is incompatible with the static Swift runtime.
 RUN --mount=type=cache,target=/build/.build \
     swift build -c release \
         --product {{name}} \
@@ -43,6 +40,9 @@ RUN --mount=type=cache,target=/build/.build \
 
 # Switch to the staging area
 WORKDIR /staging
+
+# Copy static swift backtracer binary to staging area
+RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
 
 # Copy any resources from the public directory and views directory if the directories exist
 # Ensure that by default, neither the directory nor any of its contents are writable.
