@@ -25,7 +25,7 @@ jobs:
   generate-templates:
     needs: cache-toolbox
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-generate-templates
+      group: ${{ github.workflow }}-${{ github.ref }}-generate-templates-${{ toJSON(matrix) }}
       cancel-in-progress: false
     strategy:
       fail-fast: false
