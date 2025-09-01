@@ -6,6 +6,8 @@ on:
     outputs:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
+permissions:
+  contents: read
 env:
   SWIFT_IMAGE: 'swift:6.1-noble'
 
@@ -20,17 +22,20 @@ jobs:
       group: cache_toolbox_for_template
       cancel-in-progress: false
     outputs:
-      cache_key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ steps.latest.outputs.tag }}
+      cache-key: ${{ steps.latest.outputs.cache-key }}
     runs-on: ubuntu-latest
     steps:
       - name: Get latest toolbox release
         id: latest
-        run: 'echo "tag=$(curl -fsSL "https://api.github.com/repos/vapor/toolbox/releases/latest" | jq -r .tag_name)" >>"${GITHUB_OUTPUT}"'
+        run: |
+          tag="$(curl -fsSL 'https://api.github.com/repos/vapor/toolbox/releases/latest' | jq -r '.tag_name')"
+          echo "tag=${tag}" >>"${GITHUB_OUTPUT}"
+          echo "cache-key=${SWIFT_IMAGE}-vapor-toolbox-${tag}" >>"${GITHUB_OUTPUT}"
       - name: Check cache
         id: check
         uses: actions/cache@v4
         with:
-          key: ${{ env.SWIFT_IMAGE }}-vapor-toolbox-${{ steps.latest.outputs.tag }}
+          key: ${{ steps.latest.outputs.cache-key }}
           path: toolbox
           lookup-only: true
       - name: Check out latest toolbox
@@ -46,12 +51,11 @@ jobs:
             'swift build -c release --static-swift-stdlib --product vapor && mkdir toolbox && cp .build/release/vapor toolbox/vapor'
 
   # Run vapor new and test the template for all combinations of options
-  # Only run for PRs, running on push to main would be redundant.
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
   test-new-and-build:
-    if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+    if: ${{ !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ toJSON(matrix) }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -80,11 +84,10 @@ jobs:
       mysql:
         image: mysql:latest
         volumes: [ 'mysqlshare:/var/run/mysqld' ]
-        env: { MYSQL_ALLOW_EMPTY_PASSWORD: 'true', MYSQL_USER: vapor_username, MYSQL_PASSWORD: vapor_password, MYSQL_DATABASE: vapor_database }
+        env: { MYSQL_USER: vapor_username, MYSQL_PASSWORD: vapor_password, MYSQL_DATABASE: vapor_database, MYSQL_ALLOW_EMPTY_PASSWORD: true }
       psql:
         image: postgres:latest
-        env: { POSTGRES_USER: vapor_username, POSTGRES_DB: vapor_database, POSTGRES_PASSWORD: vapor_password,
-               POSTGRES_HOST_AUTH_METHOD: 'scram-sha-256', POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256' }
+        env: { POSTGRES_USER: vapor_username, POSTGRES_DB: vapor_database, POSTGRES_PASSWORD: vapor_password, POSTGRES_HOST_AUTH_METHOD: 'scram-sha-256', POSTGRES_INITDB_ARGS: '--auth-host=scram-sha-256' }
     steps:
       - name: Install zstd for cache action
         run: apt-get update && apt-get install -y zstd
@@ -92,7 +95,7 @@ jobs:
         id: get-cache
         uses: actions/cache/restore@v4
         with:
-          key: ${{ needs.cache-toolbox.outputs.cache_key }}
+          key: ${{ needs.cache-toolbox.outputs.cache-key }}
           path: toolbox
           fail-on-cache-miss: true
       - name: Fix MySQL config when testing MySQL
@@ -113,15 +116,13 @@ jobs:
         run: swift test --package-path template-test
         env:
           DATABASE_HOST: ${{ matrix.dbhostname }}
-          DATABASE_URL: ${{ matrix.dbhosturl }}
 
   # Run vapor new and build the container with Docker Compose for all combinations of options
-  # Only run for PRs, running on push to main would be redundant.
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
   test-new-and-container:
-    if: ${{ github.event_name == 'pull_request' && !github.event.pull_request.draft }}
+    if: ${{ !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-${{ toJSON(matrix) }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -140,7 +141,7 @@ jobs:
       - name: Get cached toolbox
         uses: actions/cache/restore@v4
         with:
-          key: ${{ needs.cache-toolbox.outputs.cache_key }}
+          key: ${{ needs.cache-toolbox.outputs.cache-key }}
           path: toolbox
           fail-on-cache-miss: true
       - name: Generate a project from the template
