@@ -9,8 +9,8 @@ on:
         type: string
         default: "yes"
     outputs:
-      cache_key:
-        value: ${{ jobs.cache-toolbox.outputs.cache_key }}
+      cache-key:
+        value: ${{ jobs.cache-toolbox.outputs.cache-key }}
 permissions:
   contents: read
 env:
