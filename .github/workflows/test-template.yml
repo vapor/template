@@ -3,6 +3,11 @@ on:
   pull_request: { types: [opened, reopened, synchronize, ready_for_review] }
   push: { branches: [main] }
   workflow_call:
+    inputs:
+      is_called:
+        required: false
+        type: string
+        default: "yes"
     outputs:
       cache_key:
         value: ${{ jobs.cache-toolbox.outputs.cache_key }}
@@ -55,7 +60,7 @@ jobs:
   test-new-and-build:
     if: ${{ !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build-${{ inputs.is_called || "no" }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -122,7 +127,7 @@ jobs:
   test-new-and-container:
     if: ${{ !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container-${{ inputs.is_called || "no" }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
