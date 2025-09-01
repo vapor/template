@@ -60,7 +60,7 @@ jobs:
   test-new-and-build:
     if: ${{ inputs.is_called != 'yes' && !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build-${{ toJSON(matrix) }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -127,7 +127,7 @@ jobs:
   test-new-and-container:
     if: ${{ inputs.is_called != 'yes' && !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container-${{ toJSON(matrix) }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
