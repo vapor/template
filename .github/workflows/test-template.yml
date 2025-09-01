@@ -106,7 +106,7 @@ jobs:
       - name: Generate a project from the template
         env:
           HEAD_REF: ${{ github.head_ref || github.ref }}
-          CLONE_URL: ${{ github.event.pull_request.head.repo.clone_url || github.event.push.repository.clone_url }}
+          CLONE_URL: ${{ github.event.pull_request.head.repo.clone_url || github.event.repository.clone_url }}
         run: |
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
@@ -147,7 +147,7 @@ jobs:
       - name: Generate a project from the template
         env:
           HEAD_REF: ${{ github.head_ref || github.ref }}
-          CLONE_URL: ${{ github.event.pull_request.head.repo.clone_url || github.event.push.repository.clone_url }}
+          CLONE_URL: ${{ github.event.pull_request.head.repo.clone_url || github.event.repository.clone_url }}
         run: |
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
