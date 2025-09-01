@@ -58,9 +58,9 @@ jobs:
   # Run vapor new and test the template for all combinations of options
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
   test-new-and-build:
-    if: ${{ !(github.event.pull_request.draft || false) }}
+    if: ${{ inputs.is_called != "yes" && !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build-${{ inputs.is_called || 'no' }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-build
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -125,9 +125,9 @@ jobs:
   # Run vapor new and build the container with Docker Compose for all combinations of options
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
   test-new-and-container:
-    if: ${{ !(github.event.pull_request.draft || false) }}
+    if: ${{ inputs.is_called != "yes" && !(github.event.pull_request.draft || false) }}
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container-${{ inputs.is_called || 'no' }}
+      group: ${{ github.workflow }}-${{ github.ref }}-test-new-and-container
       cancel-in-progress: true
     strategy:
       fail-fast: false
