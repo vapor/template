@@ -45,7 +45,7 @@ jobs:
           lookup-only: true
       - name: Check out latest toolbox
         if: ${{ !steps.check.outputs.cache-hit }}
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: vapor/toolbox
           ref: ${{ steps.latest.outputs.tag }}

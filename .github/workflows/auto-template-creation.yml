@@ -63,7 +63,7 @@ jobs:
           path: toolbox
           fail-on-cache-miss: true
       - name: Clone pregenerated template repo
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: vapor/${{ matrix.repository }}
           path: old-template-repo
