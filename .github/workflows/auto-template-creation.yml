@@ -57,7 +57,7 @@ jobs:
           owner: vapor
           repositories: ${{ matrix.repository }}
       - name: Get cached toolbox
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           key: ${{ needs.cache-toolbox.outputs.cache-key }}
           path: toolbox
