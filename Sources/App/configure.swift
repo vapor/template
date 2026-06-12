@@ -4,8 +4,8 @@ import Fluent{{fluent.db.module}}Driver
 {{/fluent}}{{#leaf}}import Leaf
 {{/leaf}}import Vapor
 
-// configures your application
-public func configure(_ app: Application) async throws {
+/// configures your application
+func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory)){{#fluent}}
 

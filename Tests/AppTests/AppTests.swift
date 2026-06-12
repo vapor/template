@@ -82,7 +82,7 @@ struct {{name}}Tests {
 {{#fluent}}
 
 extension TodoDTO: Equatable {
-    public static func == (lhs: Self, rhs: Self) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id && lhs.title == rhs.title
     }
 }
