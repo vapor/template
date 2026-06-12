@@ -24,4 +24,4 @@ swift test
 - [Vapor Website](https://vapor.codes)
 - [Vapor Documentation](https://docs.vapor.codes)
 - [Vapor GitHub](https://github.com/vapor)
-- [Vapor Community](https://github.com/vapor-community)
+- [Vapor Community maintained packages](https://github.com/vapor-community)
