@@ -38,7 +38,7 @@ jobs:
           echo "cache-key=${SWIFT_IMAGE}-vapor-toolbox-${tag}" >>"${GITHUB_OUTPUT}"
       - name: Check cache
         id: check
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           key: ${{ steps.latest.outputs.cache-key }}
           path: toolbox
@@ -98,7 +98,7 @@ jobs:
         run: apt-get update && apt-get install -y zstd
       - name: Get cached toolbox
         id: get-cache
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           key: ${{ needs.cache-toolbox.outputs.cache-key }}
           path: toolbox
@@ -144,7 +144,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get cached toolbox
-        uses: actions/cache/restore@v5
+        uses: actions/cache/restore@v6
         with:
           key: ${{ needs.cache-toolbox.outputs.cache-key }}
           path: toolbox
