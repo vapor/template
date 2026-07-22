@@ -4,7 +4,7 @@ import Logging
 import Vapor
 
 @main
-struct Entrypoint {
+enum Entrypoint {
     static func main() async throws {
         let config = ConfigReader(providers: [
             CommandLineArgumentsProvider(),
