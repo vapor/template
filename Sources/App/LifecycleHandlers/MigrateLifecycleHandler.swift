@@ -1,4 +1,5 @@
 import FluentKit
+import Logging
 import NIOCore
 import NIOPosix
 import Vapor
@@ -6,6 +7,7 @@ import Vapor
 struct MigrateLifecycleHandler: LifecycleHandler {
     let databases: Databases
     let migrations: [any Migration]
+    let logger: Logger
 
     init(databases: Databases, migrations: any Migration...) {
         self.databases = databases
@@ -22,7 +24,11 @@ struct MigrateLifecycleHandler: LifecycleHandler {
             logger: application.logger,
             on: MultiThreadedEventLoopGroup.singleton.any()
         )
-        try await migrator.setupIfNeeded().get()
-        try await migrator.prepareBatch().get()
+        do {
+            try await migrator.setupIfNeeded().get()
+            try await migrator.prepareBatch().get()
+        } catch {
+            logger.warning("Couldn't run migrations", metadata: ["error": "\(error)"])
+        }
     }
 }

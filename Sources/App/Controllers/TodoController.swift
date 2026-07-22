@@ -4,9 +4,9 @@ import RoutingKit
 import Vapor
 
 #if canImport(FoundationEssentials)
-    import struct FoundationEssentials.UUID
+    import FoundationEssentials
 #else
-    import struct Foundation.UUID
+    import Foundation
 #endif
 
 struct TodoController: RouteCollection {
