@@ -31,5 +31,5 @@ func configure(_ app: Application) async throws {
     app.lifecycle.use(MigrateLifecycleHandler(logger: app.logger, databases: databases, migrations: CreateTodo())){{/fluent}}
 
     // register routes
-    try await routes(app{{#fluent}}, database: databases.database(for: app){{/fluent}})
+    try await routes(app{{#fluent}}, databases: databases{{/fluent}})
 }

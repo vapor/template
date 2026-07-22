@@ -10,10 +10,10 @@ import Vapor
 #endif
 
 struct TodoController: RouteCollection {
-    let db: any Database
+    let databases: Databases
 
-    init(database: any Database) {
-        self.db = database
+    init(databases: Databases) {
+        self.databases = databases
     }
 
     func boot(routes: any RoutesBuilder) throws {
@@ -26,29 +26,26 @@ struct TodoController: RouteCollection {
         }
     }
 
-    @Sendable
-    func index(req: Request) async throws -> [TodoDTO] {
-        try await Todo.query(on: db).all().map { $0.toDTO() }
+    func index(_ req: Request) async throws -> [TodoDTO] {
+        try await Todo.query(on: databases.database(for: req)).all().map { $0.toDTO() }
     }
 
-    @Sendable
-    func create(req: Request) async throws -> TodoDTO {
+    func create(_ req: Request) async throws -> TodoDTO {
         let todo = try await req.content.decode(TodoDTO.self).toModel()
-
-        try await todo.save(on: db)
+        try await todo.save(on: databases.database(for: req))
         return todo.toDTO()
     }
 
-    @Sendable
-    func delete(req: Request) async throws -> HTTPStatus {
-        guard let id = req.parameters.get("todoID").flatMap(UUID.init(uuidString:)) else {
+    func delete(_ req: Request) async throws -> HTTPStatus {
+        guard
+            let idString = req.parameters.get("todoID"), let id = UUID(uuidString: idString)
+        else {
             throw Abort(.badRequest)
         }
-        guard let todo = try await Todo.find(id, on: db) else {
+        guard let todo = try await Todo.find(id, on: databases.database(for: req)) else {
             throw Abort(.notFound)
         }
-
-        try await todo.delete(on: db)
+        try await todo.delete(on: databases.database(for: req))
         return .noContent
     }
 }
