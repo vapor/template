@@ -70,6 +70,7 @@ services:
       POSTGRES_DB: *db_name
     ports:
       - '5432:5432'{{/db.is_postgres}}{{#db.is_mysql}}
+    condition: service_healthy
   db:
     image: mysql:9-oracle
     volumes:
@@ -81,3 +82,4 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     ports:
       - '3306:3306'{{/db.is_mysql}}{{/fluent}}
+    condition: service_healthy

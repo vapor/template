@@ -8,7 +8,7 @@
 [![Team Chat](https://design.vapor.codes/images/discordchat.svg)](https://discord.gg/vapor)
 [![MIT License](https://design.vapor.codes/images/mitlicense.svg)](./LICENSE)
 [![Continuous Integration](https://img.shields.io/github/actions/workflow/status/vapor/template/test-template.yml?event=push&style=plastic&logo=github&label=tests&logoColor=ccc)](https://github.com/vapor/template/actions/workflows/test-template.yml)
-[![Swift 6.3+](https://design.vapor.codes/images/swift63up.svg)](https://swift.org)
+[![Swift 6.4+](https://design.vapor.codes/images/swift64up.svg)](https://swift.org)
 
 </div>
 
