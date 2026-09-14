@@ -8,7 +8,9 @@ let package = Package(
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", branch: "main", traits: ["bcrypt"]),{{#fluent}}
+        .package(url: "https://github.com/vapor/vapor.git", from: "5.0.0-beta.1"),
+        // 📝 Logging in Vapor
++        .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),{{#fluent}}
         // 🗄 An ORM for SQL and NoSQL databases.
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.56.0"),
         // {{fluent.db.emoji}} Fluent driver for {{fluent.db.module}}.
@@ -21,6 +23,7 @@ let package = Package(
                 .product(name: "FluentKit", package: "fluent-kit"),
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
                 .product(name: "Vapor", package: "vapor"),
+                .product(name: "ConsoleLogger", package: "console-kit"),
             ],
             swiftSettings: swiftSettings
         ),
