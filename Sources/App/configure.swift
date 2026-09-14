@@ -28,7 +28,7 @@ func configure(_ app: Application) async throws {
     app.addService(databases)
 
     // run migrations before the app boots
-    app.addLifecycleHandler(MigrateLifecycleHandler(databases: databases, migrations: CreateTodo()))
+    app.addLifecycleHandler(MigrateLifecycleHandler(databases: databases, migrations: CreateTodo())){{/fluent}}
 
     // register routes
     try await routes(app{{#fluent}}, databases: databases{{/fluent}})
