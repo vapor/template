@@ -7,7 +7,6 @@ import Vapor
 struct MigrateLifecycleHandler: LifecycleHandler {
     let databases: Databases
     let migrations: [any Migration]
-    let logger: Logger
 
     init(databases: Databases, migrations: any Migration...) {
         self.databases = databases
@@ -21,14 +20,14 @@ struct MigrateLifecycleHandler: LifecycleHandler {
         let migrator = Migrator(
             databases: databases,
             migrations: migrations,
-            logger: application.logger,
+            logger: Logger.current,
             on: MultiThreadedEventLoopGroup.singleton.any()
         )
         do {
             try await migrator.setupIfNeeded().get()
             try await migrator.prepareBatch().get()
         } catch {
-            logger.warning("Couldn't run migrations", metadata: ["error": "\(error)"])
+            Logger.current.warning("Couldn't run migrations", metadata: ["error": "\(error)"])
         }
     }
 }

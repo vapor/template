@@ -9,16 +9,8 @@ extension Databases {
         case noDatabaseConfigured
     }
 
-    func database(for request: Request) throws(Error) -> any Database {
-        try self.database(logger: request.logger)
-    }
-
-    func database(for application: Application) throws(Error) -> any Database {
-        try self.database(logger: application.logger)
-    }
-
-    private func database(logger: Logger) throws(Error) -> any Database {
-        guard let database = self.database(logger: logger, on: MultiThreadedEventLoopGroup.singleton.any()) else {
+    func database() throws(Error) -> any Database {
+        guard let database = self.database(logger: Logger.current, on: MultiThreadedEventLoopGroup.singleton.any()) else {
             throw Error.noDatabaseConfigured
         }
         return database
@@ -31,7 +23,7 @@ extension Databases {
         let migrator = Migrator(
             databases: self,
             migrations: container,
-            logger: application.logger,
+            logger: Logger.current,
             on: MultiThreadedEventLoopGroup.singleton.any()
         )
         try await migrator.revertAllBatches().get()

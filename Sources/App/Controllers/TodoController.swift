@@ -27,25 +27,25 @@ struct TodoController: RouteCollection {
     }
 
     func index(_ req: Request) async throws -> [TodoDTO] {
-        try await Todo.query(on: databases.database(for: req)).all().map { $0.toDTO() }
+        try await Todo.query(on: databases.database()).all().map { $0.toDTO() }
     }
 
     func create(_ req: Request) async throws -> TodoDTO {
         let todo = try await req.content.decode(TodoDTO.self).toModel()
-        try await todo.save(on: databases.database(for: req))
+        try await todo.save(on: databases.database())
         return todo.toDTO()
     }
 
-    func delete(_ req: Request) async throws -> HTTPStatus {
+    func delete(_ req: Request) async throws -> HTTPResponse.Status {
         guard
             let idString = req.parameters.get("todoID"), let id = UUID(uuidString: idString)
         else {
             throw Abort(.badRequest)
         }
-        guard let todo = try await Todo.find(id, on: databases.database(for: req)) else {
+        guard let todo = try await Todo.find(id, on: databases.database()) else {
             throw Abort(.notFound)
         }
-        try await todo.delete(on: databases.database(for: req))
+        try await todo.delete(on: databases.database())
         return .noContent
     }
 }

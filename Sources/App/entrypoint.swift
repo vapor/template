@@ -6,24 +6,22 @@ import Vapor
 @main
 enum Entrypoint {
     static func main() async throws {
-        let config = ConfigReader(providers: [
-            CommandLineArgumentsProvider(),
-            EnvironmentVariablesProvider(),
-        ])
-        ConsoleLogger.bootstrap(config: config)
+        try await withLogger(.init(label: "vapor5.logger")) { _ in
+            let config = ConfigReader(providers: [
+                CommandLineArgumentsProvider(),
+                EnvironmentVariablesProvider(),
+            ])
+            ConsoleLogger.bootstrapWithConfigReader(config: config)
 
-        let services = Application.ServiceConfiguration(
-            logger: .provided(.init(label: "{{name}}.logger"))
-        )
-
-        let app = try await Application(configReader: config, services: services)
-        do {
-            try await configure(app)
-            try await app.run()
-            try await app.shutdown()
-        } catch {
-            try? await app.shutdown()
-            throw error
+            let app = try await Application(configReader: config)
+            do {
+                try await configure(app)
+                try await app.run()
+                try await app.shutdown()
+            } catch {
+                try? await app.shutdown()
+                throw error
+            }
         }
     }
 }
