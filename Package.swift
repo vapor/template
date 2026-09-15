@@ -10,7 +10,7 @@ let package = Package(
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "5.0.0-beta.1"),
         // 📝 Logging in Vapor
-+        .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),{{#fluent}}
+        .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),{{#fluent}}
         // 🗄 An ORM for SQL and NoSQL databases.
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.56.0"),
         // {{fluent.db.emoji}} Fluent driver for {{fluent.db.module}}.
