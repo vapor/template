@@ -14,7 +14,7 @@ on:
 permissions:
   contents: read
 env:
-  SWIFT_IMAGE: 'swiftlang/swift:nightly-6.4.x-noble'
+  SWIFT_IMAGE: 'swift:6.4-noble'
 
 jobs:
 
@@ -66,7 +66,7 @@ jobs:
       fail-fast: false
       matrix:
         swift-image:
-          - 'swiftlang/swift:nightly-6.4.x-noble'
+          - 'swift:6.4-noble'
         fluentflags:
           - '--no-fluent'
           - '--fluent.db mysql'
