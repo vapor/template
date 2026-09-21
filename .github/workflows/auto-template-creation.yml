@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: vapor/${{ matrix.repository }}
-          path: old-template-repo
+          path: template-repo
           ref: main
           token: ${{ steps.get-token.outputs.token }}
       - name: Generate template
@@ -74,8 +74,11 @@ jobs:
           APP_SLUG: ${{ steps.get-token.outputs.app-slug }}
         run: |
           APP_BOT_ID="$(curl -fsSL "https://api.github.com/users/${APP_SLUG}%5Bbot%5D" | jq '.id')"
-          toolbox/vapor new "${{ matrix.repository }}" ${{ matrix.flags }} --no-git -o template-repo
-          mv old-template-repo/.git template-repo/.git
+          toolbox/vapor new "${{ matrix.repository }}" ${{ matrix.flags }} --no-git -o generated
+          # Swap the repo contents in place. actions/checkout v6+ keeps the token in a separate file
+          # referenced by an includeIf keyed on the original .git path, so the git dir must not move.
+          find template-repo -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          find generated -mindepth 1 -maxdepth 1 -exec mv {} template-repo/ \;
           cd template-repo
           git add -A
           git diff-index --quiet HEAD && exit 0 || true
