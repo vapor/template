@@ -35,9 +35,9 @@ variables:
               version: "4.9.0"
               is_sqlite: true
               emoji: "\U0001FAB6"
-  - name: leaf
-    description: Would you like to use Leaf (templating)?
-    type: bool
+  # - name: leaf
+  #   description: Would you like to use Leaf (templating)?
+  #   type: bool
 files:
   - file: Package.swift
     dynamic: true
@@ -47,6 +47,7 @@ files:
         dynamic_name: "{{name}}"
         files:
           - file: entrypoint.swift
+            dynamic: true
           - file: configure.swift
             dynamic: true
           - file: routes.swift
@@ -68,6 +69,14 @@ files:
               - .gitkeep
               - file: TodoController.swift
                 if: fluent
+          - folder: LifecycleHandlers
+            if: fluent
+            files:
+              - MigrateLifecycleHandler.swift
+          - folder: Extensions
+            if: fluent
+            files:
+              - Databases+Vapor.swift
   - folder: Tests
     files:
       - folder: AppTests
@@ -76,12 +85,14 @@ files:
           - file: AppTests.swift
             dynamic_name: "{{name}}Tests.swift"
             dynamic: true
-  - folder: Resources
-    if: leaf
-    files:
-      - folder: Views
-        files:
-          - file: index.leaf
+          - file: AppTrait.swift
+            dynamic: true
+  # - folder: Resources
+  #   if: leaf
+  #   files:
+  #     - folder: Views
+  #       files:
+  #         - file: index.leaf
   - folder: Public
     files:
       - .gitkeep
