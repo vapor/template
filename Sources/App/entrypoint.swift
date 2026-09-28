@@ -5,16 +5,20 @@ import Logging
 import Vapor
 
 @main
-enum Entrypoint: AsyncParsableCommand {
+struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
+        commandName: "{{name}}",
     	subcommands: [
             Serve.self,
             Routes.self,
+            Migrate.self,
         ],
         defaultSubcommand: Serve.self
     )
 
     struct Serve: AsyncParsableCommand {
+        static let configuration = CommandConfiguration(abstract: "Begins serving the app over HTTP.")
+
         @Option(help: "The hostname the server will run on.")
         var hostname: String?
 
@@ -24,7 +28,7 @@ enum Entrypoint: AsyncParsableCommand {
         @Option(help: "Convenience for setting hostname and port together, in the format `hostname:port`.")
         var bind: String?
 
-        @Option(help: "The path for the unix domain socket file the server will bind to.")
+        @Option(help: "The path for the Unix domain socket file the server will bind to.")
         var socketPath: String?
 
         mutating func run() async throws {
@@ -51,12 +55,24 @@ enum Entrypoint: AsyncParsableCommand {
     }
 
     struct Routes: AsyncParsableCommand {
+        static let configuration = CommandConfiguration(abstract: "Displays all registered routes.")
+
         mutating func run() async throws {
             ConsoleLogger.bootstrapWithConfigReader()
             let app = try await Application()
-            try configure(app)
+            try await configure(app)
             print(app.routesASCIITable())
             try await app.shutdown()
         }
-    }
+    }{{#fluent}}
+
+    struct Migrate: AsyncParsableCommand {
+        static let configuration = CommandConfiguration(abstract: "Prepare or revert your database migrations.")
+
+        @Flag var revert = false
+
+        mutating func run() async throws {
+            print("🚧 Work in progress 🚧")
+        }
+    }{{/fluent}}
 }
