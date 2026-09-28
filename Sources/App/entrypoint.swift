@@ -10,8 +10,8 @@ struct Entrypoint: AsyncParsableCommand {
         commandName: "{{name}}",
     	subcommands: [
             Serve.self,
-            Routes.self,
-            Migrate.self,
+            Routes.self,{{#fluent}}
+            Migrate.self,{{/fluent}}
         ],
         defaultSubcommand: Serve.self
     )
