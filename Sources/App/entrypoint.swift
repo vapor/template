@@ -31,6 +31,12 @@ struct Entrypoint: AsyncParsableCommand {
         @Option(help: "The path for the Unix domain socket file the server will bind to.")
         var socketPath: String?
 
+        /// Captures all unrecognized command-line arguments
+        /// for compatibility with other libraries that use Swift Configuration.
+        /// You don't need to pass them to your `ConfigReader`, it will automatically pick them up.
+        @Argument(parsing: .allUnrecognized, help: .private)
+        var other: [String]
+
         mutating func run() async throws {
             // `@Option`s from ArgumentParser are ignored,
             // they are used only for the `--help` screen.
@@ -57,6 +63,12 @@ struct Entrypoint: AsyncParsableCommand {
     struct Routes: AsyncParsableCommand {
         static let configuration = CommandConfiguration(abstract: "Displays all registered routes.")
 
+        /// Captures all unrecognized command-line arguments
+        /// for compatibility with other libraries that use Swift Configuration.
+        /// You don't need to pass them to your `ConfigReader`, it will automatically pick them up.
+        @Argument(parsing: .allUnrecognized, help: .private)
+        var other: [String]
+
         mutating func run() async throws {
             ConsoleLogger.bootstrapWithConfigReader()
             let app = try await Application()
@@ -70,6 +82,12 @@ struct Entrypoint: AsyncParsableCommand {
         static let configuration = CommandConfiguration(abstract: "Prepare or revert your database migrations.")
 
         @Flag var revert = false
+
+        /// Captures all unrecognized command-line arguments
+        /// for compatibility with other libraries that use Swift Configuration.
+        /// You don't need to pass them to your `ConfigReader`, it will automatically pick them up.
+        @Argument(parsing: .allUnrecognized, help: .private)
+        var other: [String]
 
         mutating func run() async throws {
             print("🚧 Work in progress 🚧")
