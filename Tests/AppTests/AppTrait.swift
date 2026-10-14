@@ -30,7 +30,7 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
     ) async throws {
         {{#fluent}}try await VaporTesting::withApp { application in
             let databases = Databases(threadPool: .singleton, on: .singletonMultiThreadedEventLoopGroup)
-            {{#fluent.db.is_postgres}}let databaseConfig = app.configReader.scoped(to: "database")
+            {{#fluent.db.is_postgres}}let databaseConfig = application.configReader.scoped(to: "database")
             databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
                 hostname: databaseConfig.string(forKey: "host", default: "localhost"),
                 port: databaseConfig.int(forKey: "port", default: SQLPostgresConfiguration.ianaPortNumber),
@@ -38,7 +38,7 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
                 password: databaseConfig.string(forKey: "password", default: "vapor_password"),
                 database: databaseConfig.string(forKey: "name", default: "vapor_database"),
                 tls: .prefer(try .init(configuration: .clientDefault)))
-            ), as: .psql){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}let databaseConfig = app.configReader.scoped(to: "database")
+            ), as: .psql){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}let databaseConfig = application.configReader.scoped(to: "database")
             databases.use(DatabaseConfigurationFactory.mysql(
                 hostname: databaseConfig.string(forKey: "host", default: "localhost"),
                 port: databaseConfig.int(forKey: "port", default: MySQLConfiguration.ianaPortNumber),
@@ -65,7 +65,7 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
                 }
             }
         }{{/fluent}}{{^fluent}}try await VaporTesting::withApp(configure: configure) { application in
-            try await $_application.withValue(app) {
+            try await $_application.withValue(application) {
                 try await function()
             }
         }{{/fluent}}
