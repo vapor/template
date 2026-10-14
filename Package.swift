@@ -13,6 +13,8 @@ let package = Package(
         .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),
         // 🖥️ Straightforward, type-safe argument parsing for Swift.
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),{{#fluent}}
+        // 📖 API package for reading configuration.
+        .package(url: "https://github.com/apple/swift-configuration.git", from: "1.2.2"),
         // 🗄 An ORM for SQL and NoSQL databases.
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.56.0"),
         // {{fluent.db.emoji}} Fluent driver for {{fluent.db.module}}.
@@ -22,6 +24,7 @@ let package = Package(
         .executableTarget(
             name: "{{name}}",
             dependencies: [{{#fluent}}
+                .product(name: "Configuration", package: "swift-configuration"),
                 .product(name: "FluentKit", package: "fluent-kit"),
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
                 .product(name: "Vapor", package: "vapor"),

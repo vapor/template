@@ -1,7 +1,8 @@
 @testable import {{name}}
 import Testing
 import Vapor
-{{#fluent}}import NIOSSL
+{{#fluent}}import Configuration
+import NIOSSL
 import FluentKit
 import Fluent{{fluent.db.module}}Driver
 {{/fluent}}
