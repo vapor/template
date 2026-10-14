@@ -21,22 +21,24 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
     func provideScope(
         for test: Test, testCase: Test.Case?, performing function: @Sendable @concurrent () async throws -> Void
     ) async throws {
-        let app = try await Application(.testing){{#fluent}}
+        let app = try Application(.testing){{#fluent}}
+
+        let databaseConfig = app.configReader.scoped(to: "database")
 
         let databases = Databases(threadPool: .singleton, on: .singletonMultiThreadedEventLoopGroup)
         {{#fluent.db.is_postgres}}databases.use(DatabaseConfigurationFactory.postgres(configuration: .init(
-            hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-            port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? SQLPostgresConfiguration.ianaPortNumber,
-            username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-            password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-            database: Environment.get("DATABASE_NAME") ?? "vapor_database",
+            hostname: databaseConfig.string(forKey: "host", default: "localhost"),
+            port: databaseConfig.int(forKey: "port", default: SQLPostgresConfiguration.ianaPortNumber),
+            username: databaseConfig.string(forKey: "username", default: "vapor_username"),
+            password: databaseConfig.string(forKey: "password", default: "vapor_password"),
+            database: databaseConfig.string(forKey: "name", default: "vapor_database"),
             tls: .prefer(try .init(configuration: .clientDefault)))
         ), as: .psql){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}databases.use(DatabaseConfigurationFactory.mysql(
-            hostname: Environment.get("DATABASE_HOST") ?? "localhost",
-            port: Environment.get("DATABASE_PORT").flatMap(Int.init(_:)) ?? MySQLConfiguration.ianaPortNumber,
-            username: Environment.get("DATABASE_USERNAME") ?? "vapor_username",
-            password: Environment.get("DATABASE_PASSWORD") ?? "vapor_password",
-            database: Environment.get("DATABASE_NAME") ?? "vapor_database"
+            hostname: databaseConfig.string(forKey: "host", default: "localhost"),
+            port: databaseConfig.int(forKey: "port", default: MySQLConfiguration.ianaPortNumber),
+            username: databaseConfig.string(forKey: "username", default: "vapor_username"),
+            password: databaseConfig.string(forKey: "password", default: "vapor_password"),
+            database: databaseConfig.string(forKey: "name", default: "vapor_database")
         ), as: .mysql){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
 
         do {
