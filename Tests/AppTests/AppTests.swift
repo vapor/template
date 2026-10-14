@@ -6,8 +6,8 @@ import VaporTesting
 {{#fluent}}import FluentKit
 {{/fluent}}
 
-{{#fluent}}@Suite("App Tests", .serialized, .withApp())
-{{/fluent}}{{^fluent}}@Suite("App Tests", .withApp())
+{{#fluent}}@Suite("App Tests", .serialized, .withApp)
+{{/fluent}}{{^fluent}}@Suite("App Tests", .withApp)
 {{/fluent}}
 struct {{name}}Tests {
     @Test("Test Hello World Route")
@@ -61,6 +61,7 @@ struct {{name}}Tests {
     }{{/fluent}}
 }
 {{#fluent}}
+
 extension TodoDTO: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.id == rhs.id && lhs.title == rhs.title

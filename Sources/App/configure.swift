@@ -3,6 +3,7 @@ import NIOSSL
 import FluentKit
 import Fluent{{fluent.db.module}}Driver
 {{/fluent}}import Vapor
+
 /// configures your application
 func configure(_ app: Application) async throws {
     // uncomment to serve files from /Public folder
