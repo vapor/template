@@ -72,9 +72,10 @@ jobs:
           - '--fluent.db mysql'
           - '--fluent.db postgres'
           - '--fluent.db sqlite'
-        leafflags:
-          - '--leaf'
-          - '--no-leaf'
+        leafflags: []
+          # TODO: Add them back when Leaf is supported
+          # - '--leaf'
+          # - '--no-leaf'
         include:
           - fluentflags: '--fluent.db mysql'
             dbhostname: mysql
@@ -137,9 +138,10 @@ jobs:
           - '--fluent.db mysql'
           - '--fluent.db postgres'
           - '--fluent.db sqlite'
-        leafflags:
-          - '--leaf'
-          - '--no-leaf'
+        leafflags: []
+          # TODO: Add them back when Leaf is supported
+          # - '--leaf'
+          # - '--no-leaf'
     needs: cache-toolbox
     runs-on: ubuntu-latest
     steps:
