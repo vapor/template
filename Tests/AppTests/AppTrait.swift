@@ -1,25 +1,17 @@
-@testable import {{name}}
+{{#fluent}}import Configuration
+import FluentKit
+import Fluent{{fluent.db.module}}Driver
+import NIOSSL
+{{/fluent}}
 import Testing
 import Vapor
 import VaporTesting
-{{#fluent}}import Configuration
-import NIOSSL
-import FluentKit
-import Fluent{{fluent.db.module}}Driver
-{{/fluent}}
+
+@testable import {{name}}
 
 @TaskLocal var _application: Application?
-
-var app: Application {
-    get throws { try #require(_application) }
-}
 {{#fluent}}
-
 @TaskLocal var _database: (any Database)?
-
-var database: any Database {
-    get throws { try #require(_database) }
-}
 {{/fluent}}
 
 struct AppTrait: TestTrait, SuiteTrait, TestScoping {
@@ -73,5 +65,7 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
 }
 
 extension Trait where Self == AppTrait {
+    /// Enable this trait to access a fresh instance of your Vapor application for each test at the `app` variable.
+    {{#fluent}}/// You will also have access to your database at the `database` variable, with migrations run before and reverted after each test.{{/fluent}}
     static var withApp: Self { .init() }
 }

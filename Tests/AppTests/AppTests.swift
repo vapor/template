@@ -1,10 +1,11 @@
-@testable import {{name}}
 import HTTPTypes
 import Testing
 import Vapor
 import VaporTesting
 {{#fluent}}import FluentKit
 {{/fluent}}
+
+@testable import {{name}}
 
 {{#fluent}}@Suite("App Tests", .serialized, .withApp)
 {{/fluent}}{{^fluent}}@Suite("App Tests", .withApp)
@@ -60,7 +61,19 @@ struct {{name}}Tests {
         }
     }{{/fluent}}
 }
+
+/// If the `withApp` test trait is enabled, you can get here
+/// a fresh instance of your Vapor application for each test.
+private var app: Application {
+    get throws { try #require(_application) }
+}
 {{#fluent}}
+
+/// If the `withApp` test trait is enabled, you can access your database here.
+/// Migrations are run before and reverted after each test.
+private var database: any Database {
+    get throws { try #require(_database) }
+}
 
 extension TodoDTO: Equatable {
     static func == (lhs: Self, rhs: Self) -> Bool {
