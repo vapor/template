@@ -47,7 +47,7 @@ struct Entrypoint: AsyncParsableCommand {
                 ])
                 ConsoleLogger.bootstrapWithConfigReader(config: config)
 
-                let app = try await Application(configReader: config)
+                let app = try Application(configReader: config)
                 do {
                     try await configure(app)
                     try await app.run()
@@ -71,7 +71,7 @@ struct Entrypoint: AsyncParsableCommand {
 
         mutating func run() async throws {
             ConsoleLogger.bootstrapWithConfigReader()
-            let app = try await Application()
+            let app = try Application()
             try await configure(app)
             print(app.routesASCIITable())
             try await app.shutdown()
