@@ -4,17 +4,13 @@ import RoutingKit
 import Vapor
 
 #if canImport(FoundationEssentials)
-    import FoundationEssentials
+import FoundationEssentials
 #else
-    import Foundation
+import Foundation
 #endif
 
 struct TodoController: RouteCollection {
     let databases: Databases
-
-    init(databases: Databases) {
-        self.databases = databases
-    }
 
     func boot(routes: any RoutesBuilder) throws {
         let todos = routes.grouped("todos")

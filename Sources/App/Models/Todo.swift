@@ -1,9 +1,9 @@
 import FluentKit
 
 #if canImport(FoundationEssentials)
-    import struct FoundationEssentials.UUID
+import struct FoundationEssentials.UUID
 #else
-    import struct Foundation.UUID
+import struct Foundation.UUID
 #endif
 
 /// Property wrappers interact poorly with `Sendable` checking, causing a warning for the `@ID` property
@@ -18,7 +18,7 @@ final class Todo: Model, @unchecked Sendable {
     @Field(key: "title")
     var title: String
 
-    init() { }
+    init() {}
 
     init(id: UUID? = nil, title: String) {
         self.id = id

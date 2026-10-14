@@ -1,9 +1,9 @@
+{{#fluent}}import FluentKit
+{{/fluent}}
 import HTTPTypes
 import Testing
 import Vapor
 import VaporTesting
-{{#fluent}}import FluentKit
-{{/fluent}}
 
 @testable import {{name}}
 
@@ -30,8 +30,8 @@ struct {{name}}Tests {
             #expect(res.status == .ok)
             let todos = try await res.content.decode([TodoDTO].self)
             #expect(
-                todos.sorted { ($0.title ?? "") < ($1.title ?? "") } ==
-                sampleTodos.map { $0.toDTO() }.sorted { ($0.title ?? "") < ($1.title ?? "") }
+                todos.sorted { ($0.title ?? "") < ($1.title ?? "") }
+                    == sampleTodos.map { $0.toDTO() }.sorted { ($0.title ?? "") < ($1.title ?? "") }
             )
         }
     }

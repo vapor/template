@@ -8,7 +8,7 @@ import Vapor
 struct Entrypoint: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
         commandName: "{{name}}",
-    	subcommands: [
+        subcommands: [
             Serve.self,
             Routes.self,{{#fluent}}
             Migrate.self,{{/fluent}}
