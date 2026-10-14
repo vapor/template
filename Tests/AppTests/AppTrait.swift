@@ -45,7 +45,7 @@ struct AppTrait: TestTrait, SuiteTrait, TestScoping {
         do {
             try await configure(app)
             try await app.run()
-            try await $_database.withValue(databases.database(for: app)) {
+            try await $_database.withValue(databases.database()) {
                 try await $_application.withValue(app) {
                     try await function()
                 }
