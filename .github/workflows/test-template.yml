@@ -118,10 +118,6 @@ jobs:
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
             --no-commit -o template-test \
             ${{ matrix.fluentflags }}
-      - name: Build and test template
-        run: swift test --package-path template-test
-        env:
-          DATABASE_HOST: ${{ matrix.dbhostname }}
       - name: Read swift-format config file
         # The template currently does not provide a `.swift-format` file, so we use the one from `vapor/contributing`.
         # If we later add a `.swift-format` file to the template, that file will be used instead.
@@ -136,6 +132,10 @@ jobs:
           apt -q update && apt -yq install curl
           cd template-test
           curl -sL https://raw.githubusercontent.com/swiftlang/github-workflows/refs/heads/main/.github/workflows/scripts/check-swift-format.sh | bash
+      - name: Build and test template
+        run: swift test --package-path template-test
+        env:
+          DATABASE_HOST: ${{ matrix.dbhostname }}
 
   # Run vapor new and build the container with Docker Compose for all combinations of options
   # Use normal "only one of this workflow per branch at a time, cancel stale jobs" concurrency
