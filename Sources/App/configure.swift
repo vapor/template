@@ -14,13 +14,15 @@ func configure(_ app: Application) async throws {
     {{#fluent.db.is_postgres}}let databaseConfig = app.configReader.scoped(to: "database")
 
     databases.use(
-        DatabaseConfigurationFactory.postgres(configuration: .init(
-            hostname: databaseConfig.string(forKey: "host", default: "localhost"),
-            port: databaseConfig.int(forKey: "port", default: SQLPostgresConfiguration.ianaPortNumber),
-            username: databaseConfig.string(forKey: "username", default: "vapor_username"),
-            password: databaseConfig.string(forKey: "password", default: "vapor_password"),
-            database: databaseConfig.string(forKey: "name", default: "vapor_database"),
-            tls: .prefer(try .init(configuration: .clientDefault)))
+        DatabaseConfigurationFactory.postgres(
+            configuration: .init(
+                hostname: databaseConfig.string(forKey: "host", default: "localhost"),
+                port: databaseConfig.int(forKey: "port", default: SQLPostgresConfiguration.ianaPortNumber),
+                username: databaseConfig.string(forKey: "username", default: "vapor_username"),
+                password: databaseConfig.string(forKey: "password", default: "vapor_password"),
+                database: databaseConfig.string(forKey: "name", default: "vapor_database"),
+                tls: .prefer(try .init(configuration: .clientDefault))
+            )
         ),
         as: .psql
     ){{/fluent.db.is_postgres}}{{#fluent.db.is_mysql}}let databaseConfig = app.configReader.scoped(to: "database")
