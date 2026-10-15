@@ -10,7 +10,9 @@ let package = Package(
         // 💧 A server-side Swift web framework.
         .package(url: "https://github.com/vapor/vapor.git", from: "5.0.0-beta.4"),
         // 📝 Customizable logging to the console.
-        .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),{{#fluent}}
+        .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),
+        // 🖥️ Straightforward, type-safe argument parsing for Swift.
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),{{#fluent}}
         // 📖 API package for reading configuration.
         .package(url: "https://github.com/apple/swift-configuration.git", from: "1.2.2"),
         // 🗄 An ORM for SQL and NoSQL databases.
@@ -27,6 +29,7 @@ let package = Package(
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
                 .product(name: "Vapor", package: "vapor"),
                 .product(name: "ConsoleLogger", package: "console-kit"),
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ],
             swiftSettings: swiftSettings
         ),
