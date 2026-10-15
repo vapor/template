@@ -128,10 +128,7 @@ jobs:
             curl -o template-test/.swift-format https://raw.githubusercontent.com/vapor/contributing/refs/heads/main/.swift-format
           fi
       - name: Lint
-        run: |
-          apt -q update && apt -yq install curl
-          cd template-test
-          curl -sL https://raw.githubusercontent.com/swiftlang/github-workflows/refs/heads/main/.github/workflows/scripts/check-swift-format.sh | bash
+        run: swift format lint --parallel --strict --recursive template-test
       - name: Build and test template
         run: swift test --package-path template-test
         env:
