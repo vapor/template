@@ -1,6 +1,6 @@
 {
-    "name": "Swift",
-    "image": "swiftlang/swift:nightly-6.4.x-noble",
+    "name": "{{name}}",
+    "image": "swift:6.4-noble",
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
             "installZsh": "false",
@@ -28,7 +28,8 @@
             },
             // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
-                "swiftlang.swift-vscode"
+                "swiftlang.swift-vscode",
+                "Vapor.vapor-vscode"
             ]
         }
     },
