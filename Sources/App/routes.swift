@@ -1,16 +1,15 @@
-{{#fluent}}import Fluent
-{{/fluent}}import Vapor
+{{#fluent}}import FluentKit
+{{/fluent}}import RoutingKit
+import Vapor
 
-func routes(_ app: Application) throws {
-    {{#leaf}}app.get { req async throws in
-        try await req.view.render("index", ["title": "Hello Vapor!"])
-    }{{/leaf}}{{^leaf}}app.get { req async in
+func routes(_ app: Application{{#fluent}}, databases: Databases{{/fluent}}) async throws {
+    app.get { req async in
         "It works!"
-    }{{/leaf}}
+    }
 
     app.get("hello") { req async -> String in
         "Hello, world!"
     }{{#fluent}}
 
-    try app.register(collection: TodoController()){{/fluent}}
+    try await app.register(collection: TodoController(databases: databases)){{/fluent}}
 }

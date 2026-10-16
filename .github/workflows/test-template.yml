@@ -14,7 +14,7 @@ on:
 permissions:
   contents: read
 env:
-  SWIFT_IMAGE: 'swift:6.3-noble'
+  SWIFT_IMAGE: 'swift:6.4-noble'
 
 jobs:
 
@@ -66,15 +66,16 @@ jobs:
       fail-fast: false
       matrix:
         swift-image:
-          - 'swift:6.3-noble'
+          - 'swift:6.4-noble'
         fluentflags:
           - '--no-fluent'
           - '--fluent.db mysql'
           - '--fluent.db postgres'
           - '--fluent.db sqlite'
-        leafflags:
-          - '--leaf'
-          - '--no-leaf'
+        # leafflags:
+          # TODO: Add them back when Leaf is supported
+          # - '--leaf'
+          # - '--no-leaf'
         include:
           - fluentflags: '--fluent.db mysql'
             dbhostname: mysql
@@ -116,7 +117,18 @@ jobs:
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
             --no-commit -o template-test \
-            ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+            ${{ matrix.fluentflags }}
+      - name: Read swift-format config file
+        # The template currently does not provide a `.swift-format` file, so we use the one from `vapor/contributing`.
+        # If we later add a `.swift-format` file to the template, that file will be used instead.
+        run: |
+          if [ ! -f template-test/.swift-format ]; then
+            echo "No .swift-format file found, using default configuration."
+            apt-get update && apt-get install -y curl
+            curl -o template-test/.swift-format https://raw.githubusercontent.com/vapor/contributing/refs/heads/main/.swift-format
+          fi
+      - name: Lint
+        run: swift format lint --parallel --strict --recursive template-test
       - name: Build and test template
         run: swift test --package-path template-test
         env:
@@ -137,9 +149,10 @@ jobs:
           - '--fluent.db mysql'
           - '--fluent.db postgres'
           - '--fluent.db sqlite'
-        leafflags:
-          - '--leaf'
-          - '--no-leaf'
+        # leafflags:
+          # TODO: Add them back when Leaf is supported
+          # - '--leaf'
+          # - '--no-leaf'
     needs: cache-toolbox
     runs-on: ubuntu-latest
     steps:
@@ -157,6 +170,6 @@ jobs:
           toolbox/vapor new template-test \
             --template "${CLONE_URL}" --branch "${HEAD_REF}" \
             --no-commit -o template-test \
-            ${{ matrix.fluentflags }} ${{ matrix.leafflags }}
+            ${{ matrix.fluentflags }}
       - name: Build Docker container
         run: docker compose --project-directory template-test build
