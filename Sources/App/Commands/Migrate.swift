@@ -9,14 +9,18 @@ struct Migrate: AsyncParsableCommand {
 
     @Flag var revert = false
 
-    /// Captures all unrecognized command-line arguments for compatibility with other libraries that use Swift Configuration.
+    /// Captures all unrecognized command-line arguments
+    /// for compatibility with other libraries that use Swift Configuration.
+    /// You don't need to pass them to your `ConfigReader`, it will automatically pick them up.
     @Argument(parsing: .allUnrecognized, help: .private)
-    var configArguments: [String]
+    var other: [String] = []
 
     mutating func run() async throws {
         try await withLogger(.init(label: "vapor.logger.migrate")) { _ in
+            // `@Flag`s from ArgumentParser are ignored,
+            // they are used only for the `--help` screen.
             let config = ConfigReader(providers: [
-                CommandLineArgumentsProvider(arguments: ["migrate"] + configArguments),
+                CommandLineArgumentsProvider(),
                 EnvironmentVariablesProvider(),
             ])
             ConsoleLogger.bootstrapWithConfigReader(config: config)
