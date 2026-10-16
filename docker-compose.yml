@@ -33,7 +33,8 @@ services:
     environment:
       <<: *shared_environment{{#fluent}}{{^db.is_sqlite}}
     depends_on:
-      - db{{/db.is_sqlite}}{{/fluent}}
+      db:
+        condition: service_healthy{{/db.is_sqlite}}{{/fluent}}
     ports:
       - '8080:8080'
     # user: '0' # uncomment to run as root for testing purposes even though Dockerfile defines 'vapor' user.
@@ -45,7 +46,8 @@ services:
     environment:
       <<: *shared_environment{{^db.is_sqlite}}
     depends_on:
-      - db{{/db.is_sqlite}}
+      db:
+        condition: service_healthy{{/db.is_sqlite}}
     command: ["migrate", "--yes"]
     deploy:
       replicas: 0
@@ -56,7 +58,8 @@ services:
     environment:
       <<: *shared_environment{{^db.is_sqlite}}
     depends_on:
-      - db{{/db.is_sqlite}}
+      db:
+        condition: service_healthy{{/db.is_sqlite}}
     command: ["migrate", "--revert", "--yes"]
     deploy:
       replicas: 0{{#db.is_postgres}}
@@ -70,7 +73,12 @@ services:
       POSTGRES_DB: *db_name
     ports:
       - '5432:5432'
-    condition: service_healthy{{/db.is_postgres}}{{#db.is_mysql}}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s{{/db.is_postgres}}{{#db.is_mysql}}
   db:
     image: mysql:9-oracle
     volumes:
@@ -82,4 +90,9 @@ services:
       MYSQL_RANDOM_ROOT_PASSWORD: yes
     ports:
       - '3306:3306'
-    condition: service_healthy{{/db.is_mysql}}{{/fluent}}
+    healthcheck:
+      test: mysql --user=root --password=password --execute="SHOW DATABASES;"
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s{{/db.is_mysql}}{{/fluent}}
