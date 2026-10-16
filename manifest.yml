@@ -108,3 +108,7 @@ files:
   - folder: .vscode
     files:
       - extensions.json
+  - folder: .devcontainer
+    files:
+      - file: devcontainer.json
+        dynamic: true

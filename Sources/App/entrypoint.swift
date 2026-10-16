@@ -13,7 +13,7 @@ enum Entrypoint {
             ])
             ConsoleLogger.bootstrapWithConfigReader(config: config)
 
-            let app = try await Application(configReader: config)
+            let app = try Application(configReader: config)
             do {
                 try await configure(app)
                 try await app.run()

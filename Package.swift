@@ -4,13 +4,15 @@ import PackageDescription
 let package = Package(
     name: "{{name}}",
     platforms: [
-       .macOS("26.2")
+        .macOS("26.2")
     ],
     dependencies: [
         // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", from: "5.0.0-beta.1"),
-        // 📝 Logging in Vapor
+        .package(url: "https://github.com/vapor/vapor.git", from: "5.0.0-beta.4"),
+        // 📝 Customizable logging to the console.
         .package(url: "https://github.com/vapor/console-kit.git", from: "5.0.0-beta"),{{#fluent}}
+        // 📖 API package for reading configuration.
+        .package(url: "https://github.com/apple/swift-configuration.git", from: "1.2.2"),
         // 🗄 An ORM for SQL and NoSQL databases.
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.56.0"),
         // {{fluent.db.emoji}} Fluent driver for {{fluent.db.module}}.
@@ -20,6 +22,7 @@ let package = Package(
         .executableTarget(
             name: "{{name}}",
             dependencies: [{{#fluent}}
+                .product(name: "Configuration", package: "swift-configuration"),
                 .product(name: "FluentKit", package: "fluent-kit"),
                 .product(name: "Fluent{{fluent.db.module}}Driver", package: "fluent-{{fluent.db.url}}-driver"),{{/fluent}}
                 .product(name: "Vapor", package: "vapor"),
@@ -34,7 +37,7 @@ let package = Package(
                 .product(name: "VaporTesting", package: "vapor"),
             ],
             swiftSettings: swiftSettings
-        )
+        ),
     ]
 )
 
