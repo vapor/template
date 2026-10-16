@@ -16,11 +16,11 @@ func configure(_ app: Application) async throws {
     databases.use(
         DatabaseConfigurationFactory.postgres(
             configuration: .init(
-                hostname: databaseConfig.string(forKey: "host", default: "localhost", isSecret: true),
-                port: databaseConfig.int(forKey: "port", default: SQLPostgresConfiguration.ianaPortNumber, isSecret: true),
-                username: databaseConfig.string(forKey: "username", default: "vapor_username", isSecret: true),
-                password: databaseConfig.string(forKey: "password", default: "vapor_password", isSecret: true),
-                database: databaseConfig.string(forKey: "name", default: "vapor_database", isSecret: true),
+                hostname: databaseConfig.string(forKey: "host", isSecret: true, default: "localhost"),
+                port: databaseConfig.int(forKey: "port", isSecret: true, default: SQLPostgresConfiguration.ianaPortNumber),
+                username: databaseConfig.string(forKey: "username", isSecret: true, default: "vapor_username"),
+                password: databaseConfig.string(forKey: "password", isSecret: true, default: "vapor_password"),
+                database: databaseConfig.string(forKey: "name", isSecret: true, default: "vapor_database"),
                 tls: .prefer(try .init(configuration: .clientDefault))
             )
         ),
@@ -29,11 +29,11 @@ func configure(_ app: Application) async throws {
 
     databases.use(
         DatabaseConfigurationFactory.mysql(
-            hostname: databaseConfig.string(forKey: "host", default: "localhost", isSecret: true),
-            port: databaseConfig.int(forKey: "port", default: MySQLConfiguration.ianaPortNumber, isSecret: true),
-            username: databaseConfig.string(forKey: "username", default: "vapor_username", isSecret: true),
-            password: databaseConfig.string(forKey: "password", default: "vapor_password", isSecret: true),
-            database: databaseConfig.string(forKey: "name", default: "vapor_database", isSecret: true)
+            hostname: databaseConfig.string(forKey: "host", isSecret: true, default: "localhost"),
+            port: databaseConfig.int(forKey: "port", isSecret: true, default: MySQLConfiguration.ianaPortNumber),
+            username: databaseConfig.string(forKey: "username", isSecret: true, default: "vapor_username"),
+            password: databaseConfig.string(forKey: "password", isSecret: true, default: "vapor_password"),
+            database: databaseConfig.string(forKey: "name", isSecret: true, default: "vapor_database")
         ),
         as: .mysql
     ){{/fluent.db.is_mysql}}{{#fluent.db.is_sqlite}}databases.use(DatabaseConfigurationFactory.sqlite(.file("db.sqlite")), as: .sqlite){{/fluent.db.is_sqlite}}
