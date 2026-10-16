@@ -1,27 +1,18 @@
+import ArgumentParser
 import Configuration
 import ConsoleLogger
 import Logging
 import Vapor
 
 @main
-enum Entrypoint {
-    static func main() async throws {
-        try await withLogger(.init(label: "vapor5.logger")) { _ in
-            let config = ConfigReader(providers: [
-                CommandLineArgumentsProvider(),
-                EnvironmentVariablesProvider(),
-            ])
-            ConsoleLogger.bootstrapWithConfigReader(config: config)
-
-            let app = try Application(configReader: config)
-            do {
-                try await configure(app)
-                try await app.run()
-                try await app.shutdown()
-            } catch {
-                try? await app.shutdown()
-                throw error
-            }
-        }
-    }
+struct Entrypoint: AsyncParsableCommand {
+    static let configuration = CommandConfiguration(
+        commandName: "{{name}}",
+        subcommands: [
+            Serve.self,
+            Routes.self,{{#fluent}}
+            Migrate.self,{{/fluent}}
+        ],
+        defaultSubcommand: Serve.self
+    )
 }
