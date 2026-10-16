@@ -77,6 +77,12 @@ files:
             if: fluent
             files:
               - Databases+Vapor.swift
+          - folder: Commands
+            files:
+              - Serve.swift
+              - Routes.swift
+              - file: Migrate.swift
+                if: fluent
   - folder: Tests
     files:
       - folder: AppTests
